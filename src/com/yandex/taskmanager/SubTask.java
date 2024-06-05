@@ -1,4 +1,4 @@
-import java.util.Objects;
+package com.yandex.taskmanager;
 
 public class SubTask extends Task {
     private int epic;
@@ -19,6 +19,6 @@ public class SubTask extends Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SubTask subTask = (SubTask) o;
-        return super.equals(o) && epic == subTask.epic;
+        return super.equals(o) && (epic == subTask.epic || subTask.epic == 0);
     }
 }

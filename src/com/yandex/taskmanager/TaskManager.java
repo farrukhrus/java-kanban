@@ -1,8 +1,11 @@
+package com.yandex.taskmanager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class TaskManager {
-    private static int counter = 0;
+    private static int counter = 1;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, SubTask> subTasks;
@@ -26,31 +29,15 @@ public class TaskManager {
     }
 
     // создать эпик
-    public void addEpic(Epic epic, ArrayList<SubTask> subTasks) {
-        if (!subTasks.isEmpty()) {
-            // Проверяем, существует ли уже эпик с таким ID
-            if (isUnique(epic)) {
-                int epicId = generateId();
-                epic.setId(epicId);
-                // Добавляем подзадачу
-                for (SubTask subTask : subTasks){
-                    subTask.setEpic(epicId);
-                    addSubTask(subTask, epic);
-                }
-                if (!epic.getSubTasks().isEmpty()) {
-                    epics.put(epicId, epic);
-                    updateEpicOnChange(epicId);
-                } else {
-                    System.out.println(Util.ANSI_RED + "Эпик "+ epic.getName() +
-                            " не создан. Подзадачи не прошли верификацию." + Util.ANSI_RESET);
-                }
-            } else {
-                System.out.println(Util.ANSI_RED + "Эпик с именем "+ epic.getName() +
-                        " уже создан" + Util.ANSI_RESET);
-            }
+    public void addEpic(Epic epic) {
+        // Проверяем, существует ли уже эпик с таким ID
+        if (isUnique(epic)) {
+            int epicId = generateId();
+            epic.setId(epicId);
+            this.epics.put(epicId, epic);
         } else {
-            System.out.println(Util.ANSI_RED + "Эпик должен содержать одну или более подзадач" +
-                    Util.ANSI_RESET);
+            System.out.println(Util.ANSI_RED + "Эпик с именем "+ epic.getName() +
+                    " уже создан" + Util.ANSI_RESET);
         }
     }
 
@@ -60,8 +47,12 @@ public class TaskManager {
         if (isUnique(subTask)) {
             int subTaskId = generateId();
             subTask.setId(subTaskId);
+            subTask.setEpic(epic.getId());
+
             epic.AddSubTask(subTaskId);
             this.subTasks.put(subTaskId, subTask);
+
+            updateEpicOnChange(epic.getId());
         } else {
             System.out.println(Util.ANSI_RED + "Найден дубликат подзадачи " + subTask.getName() +
                     " в эпике " + epic.getName() + Util.ANSI_RESET);
@@ -148,6 +139,12 @@ public class TaskManager {
             case TASK:
                 this.tasks.clear();
                 break;
+            case SUBTASK:
+                this.subTasks.clear();
+                for (int id : epics.keySet()) {
+                    updateEpicOnChange(id);
+                }
+                break;
         }
     }
 
@@ -166,7 +163,7 @@ public class TaskManager {
             this.epics.remove(id);
             for (int k : this.subTasks.keySet()) {
                 if (this.subTasks.get(k).getEpic() == id) {
-                    this.subTasks.remove(id);
+                    this.subTasks.remove(k);
                 }
             }
         }
@@ -187,51 +184,69 @@ public class TaskManager {
     }
 
     // обновить задачу
-    public void updateTask (int id, Task task, Status status) {
-        if (isUnique(task)) {
-            Task oldTask = tasks.get(id);
-            if (oldTask.getStatus() == status) {
-                System.out.println("Статус у задачи не изменился: " + task.getName());
-            } else {
-                task.setStatus(status);
+    private int getTaskByName(String name) {
+        for (int key : tasks.keySet()) {
+            if (Objects.equals(tasks.get(key).getName(), name)) {
+                return tasks.get(key).getId();
             }
+        }
+        return -1;
+    }
 
-            task.setId(id);
-            tasks.put(id, task);
+    public void updateTask (Task task) {
+        int oldTaskId = getTaskByName(task.getName());
+        if (oldTaskId != -1) {
+            task.setId(oldTaskId);
+            tasks.put(oldTaskId, task);
         } else {
-            System.out.println(Util.ANSI_RED + "Задача не уникальна: " + task.getName() + Util.ANSI_RESET);
+            System.out.println("Задачи с таким названием нет: " + task.getName());
         }
     }
 
     // обновить эпик
-    public void updateEpic (int id, Epic epic) {
-        if (isUnique(epic)) {
-            epic.setId(id);
-            epic.setSubTasks(epics.get(id).getSubTasks());
-            epics.put(id, epic);
+    private int getEpicByName(String name) {
+        for (int key : epics.keySet()) {
+            if (Objects.equals(epics.get(key).getName(), name)) {
+                return epics.get(key).getId();
+            }
         }
-        else {
-            System.out.println(Util.ANSI_RED + "Эпик не уникален: " + epic.getName() + Util.ANSI_RESET);
+        return -1;
+    }
+
+    public void updateEpic (Epic epic) {
+        int oldEpicId = getEpicByName(epic.getName());
+        if (oldEpicId != -1) {
+            epic.setId(oldEpicId);
+            epics.put(oldEpicId, epic);
+        } else {
+            System.out.println("Эписка с таким названием нет: " + epic.getName());
         }
     }
 
     // обновить подзадачу
-    public void updateSubTask(int id, SubTask subTask, Status status) {
-        if (isUnique(subTask)) {
-            SubTask oldSub = subTasks.get(id);
-            subTask.setId(id);
-            subTask.setEpic(oldSub.getEpic());
-            if (oldSub.getStatus() == status) {
-                System.out.println("Статус у подзадачи не изменился: " + subTask.getName());
-            } else {
-                subTask.setStatus(status);
+    private int getSubTaskByName(String name, int epicId) {
+        for (int key : subTasks.keySet()) {
+            SubTask subTask = subTasks.get(key);
+            if (Objects.equals(subTask.getName(), name) && subTask.getEpic() == epicId) {
+                return subTask.getId();
             }
+        }
+        return -1;
+    }
 
-            subTasks.put(id, subTask);
-            updateEpicOnChange(subTask.getEpic());
+    public void updateSubTask(SubTask subTask) {
+        // int id, SubTask subTask, Status status
+        if (subTask.getEpic() != 0) {
+            int oldSubTaskId = getSubTaskByName(subTask.getName(), subTask.getEpic());
+            if (oldSubTaskId != -1) {
+                subTask.setId(oldSubTaskId);
+                subTasks.put(oldSubTaskId, subTask);
+                updateEpicOnChange(subTask.getEpic());
+            } else {
+                System.out.println("Подзадачи с таким названием нет: " + subTask.getName());
+            }
         } else {
-            System.out.println(Util.ANSI_RED + "Подзадача " + subTask.getName() + " не уникальна в рамках эпика "
-                    + epics.get(subTask.getId()).getName() + Util.ANSI_RESET);
+            System.out.println("Подзадача должна содержать ссылку на эпик: " + subTask.getName());
         }
     }
 
@@ -251,9 +266,8 @@ public class TaskManager {
                 }
             }
         }
+        Epic epic = epics.get(epicId);
         if (size > 0) {
-
-            Epic epic = epics.get(epicId);
             if (countNew == size) {
                 epic.setStatus(Status.NEW);
             } else if (countDone == size) {
@@ -262,8 +276,6 @@ public class TaskManager {
                 epic.setStatus(Status.IN_PROGRESS);
             }
             epics.put(epicId, epic);
-        } else {
-            epics.remove(epicId);
         }
     }
 
@@ -271,21 +283,21 @@ public class TaskManager {
     private boolean isUnique(Object task) {
         String type = task.getClass().getName();
         switch (type) {
-            case "Task" -> {
+            case "com.yandex.taskmanager.Task" -> {
                 for (int k : tasks.keySet()) {
                     if (tasks.get(k).equals(task)) {
                         return false;
                     }
                 }
             }
-            case "Epic" -> {
+            case "com.yandex.taskmanager.Epic" -> {
                 for (int k : epics.keySet()) {
                     if (epics.get(k).equals(task)) {
                         return false;
                     }
                 }
             }
-            case "SubTask" -> {
+            case "com.yandex.taskmanager.SubTask" -> {
                 for (int k : subTasks.keySet()) {
                     SubTask sub = (SubTask) task;
                     if (subTasks.get(k).equals(sub)) {

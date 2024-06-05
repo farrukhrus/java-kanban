@@ -1,3 +1,5 @@
+package com.yandex.taskmanager;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -16,5 +18,13 @@ public class Epic extends Task {
 
     protected void AddSubTask(int subTask) {
         this.subTasks.add(subTask);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Epic epic = (Epic) o;
+        return super.equals(o);
     }
 }
