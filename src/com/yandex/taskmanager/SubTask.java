@@ -2,6 +2,7 @@ package com.yandex.taskmanager;
 
 public class SubTask extends Task {
     private int epic;
+
     public SubTask(String name, String description) {
         super(name, description);
     }
@@ -15,10 +16,12 @@ public class SubTask extends Task {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SubTask subTask = (SubTask) o;
-        return super.equals(o) && (epic == subTask.epic || subTask.epic == 0);
+    public String toString() {
+        return "SubTask {" +
+                "id='" + getId() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status='" + getStatus() + '\'' +
+                ", epicID='" + getEpic() + '\'' + '}';
     }
 }

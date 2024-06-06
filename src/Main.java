@@ -1,4 +1,7 @@
-package com.yandex.taskmanager;
+import com.yandex.taskmanager.Epic;
+import com.yandex.taskmanager.SubTask;
+import com.yandex.taskmanager.Task;
+import com.yandex.taskmanager.TaskManager;
 
 public class Main {
 
@@ -11,6 +14,7 @@ public class Main {
         tm.addTask(task1);
         // обновление задачи
         Task task2 = new Task("task1", "555");
+        task2.setId(task1.getId());
         tm.updateTask(task2);
 
 
@@ -20,6 +24,8 @@ public class Main {
         tm.addEpic(e1);
         // обновление эпика
         Epic e2 = new Epic("epic1", "epic1_after");
+        e2.setId(e1.getId());
+        e2.setSubTasks(e1.getSubTasks());
         tm.updateEpic(e2);
 
 
@@ -27,11 +33,14 @@ public class Main {
         SubTask t1 = new SubTask("123", "456");
         SubTask t2 = new SubTask("123", "654");
         // добавление подзадачи в эпик
-        tm.addSubTask(t1, e1);
-        tm.addSubTask(t2, e1); // защита от дубликатов
+        tm.addSubTask(t1); // не задан эпик
+        t2.setEpic(e2.getId());
+        tm.addSubTask(t2);
         // обновление подзадачи
-        t2.setEpic(t1.getEpic());
-        tm.updateSubTask(t2);
+        SubTask t3 = new SubTask("123", "564");
+        t3.setId(t2.getId());
+        t3.setEpic(t2.getEpic());
+        tm.updateSubTask(t3);
 
         // получить список подзадач по эпику
         // System.out.println( tm.getAllSubTasksByEpic(0) );
@@ -40,23 +49,17 @@ public class Main {
         // System.out.println( tm.getTaskById(task1.getId()) );
 
         // вывод всех типов задач на печать
-        // tm.printAll();
+        tm.printAll();
 
-        // обновление статуса подзадач
-        System.out.println( tm.getEpicById(e1.getId()) );
-        SubTask t1_upd = new SubTask("123upd", "456");
-        SubTask t2_upd = new SubTask("123upd", "456"); // проверка на уникальность
-        SubTask t3_upd = new SubTask("124upd", "456");
-        //tm.updateSubTask(t1.getId(), t1_upd, Status.DONE);
-        //tm.updateSubTask(t2.getId(), t2_upd, Status.DONE);
-        //tm.updateSubTask(t2.getId(), t3_upd, Status.DONE);
-
-        System.out.println( tm.getEpicById(e1.getId()) );
-        // удалить все задачи
-        // tm.deleteAll(Type.EPIC);
+        System.out.println(tm.getEpicById(e1.getId()));
+        System.out.println(tm.getTaskById(task1.getId()));
+        System.out.println(tm.getSubTaskById(t3.getId()));
+        // удалить все задачи эпики
+        tm.deleteAllEpics();
+        tm.printAll();
 
         // удалить по ID
-        // tm.deleteEpicById(e1.getId());
+        tm.deleteTaskById(task2.getId());
         // tm.deleteSubTaskById(t4.getId());
         // tm.deleteTaskById(task1.getId());
 

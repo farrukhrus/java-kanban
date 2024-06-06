@@ -2,7 +2,6 @@ package com.yandex.taskmanager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class TaskManager {
     private static int counter = 1;
@@ -18,51 +17,37 @@ public class TaskManager {
 
     // создать задачу
     public void addTask(Task task) {
-        // Проверяем, существует ли уже таск с таким ID
-        if (isUnique(task)) {
-            int taskId = generateId();
-            task.setId(taskId);
-            this.tasks.put(taskId, task);
-        } else {
-            System.out.println(Util.ANSI_RED + "Таск "+ task.getName() +" уже создан" + Util.ANSI_RESET);
-        }
+        int taskId = generateId();
+        task.setId(taskId);
+        this.tasks.put(taskId, task);
     }
 
     // создать эпик
     public void addEpic(Epic epic) {
-        // Проверяем, существует ли уже эпик с таким ID
-        if (isUnique(epic)) {
-            int epicId = generateId();
-            epic.setId(epicId);
-            this.epics.put(epicId, epic);
-        } else {
-            System.out.println(Util.ANSI_RED + "Эпик с именем "+ epic.getName() +
-                    " уже создан" + Util.ANSI_RESET);
-        }
+        int epicId = generateId();
+        epic.setId(epicId);
+        this.epics.put(epicId, epic);
     }
 
     // создачу подзадачу в эпике
-    public void addSubTask(SubTask subTask, Epic epic) {
-        // новая подзадача
-        if (isUnique(subTask)) {
-            int subTaskId = generateId();
-            subTask.setId(subTaskId);
-            subTask.setEpic(epic.getId());
-
-            epic.AddSubTask(subTaskId);
+    public void addSubTask(SubTask subTask) {
+        int subTaskId = generateId();
+        subTask.setId(subTaskId);
+        if (subTask.getEpic() != 0 && this.epics.containsKey(subTask.getEpic())) {
+            Epic epic = this.epics.get(subTask.getEpic());
+            epic.addSubTask(subTaskId);
             this.subTasks.put(subTaskId, subTask);
-
             updateEpicOnChange(epic.getId());
         } else {
-            System.out.println(Util.ANSI_RED + "Найден дубликат подзадачи " + subTask.getName() +
-                    " в эпике " + epic.getName() + Util.ANSI_RESET);
+            System.out.println("Подзадача не создана. Подзадача должна содержать ссылку на существующий эпик");
         }
+
+
     }
 
     // вывести на экран все таски
     public void printAll() {
-        if (this.tasks.isEmpty() && this.epics.isEmpty())
-        {
+        if (this.tasks.isEmpty() && this.epics.isEmpty()) {
             System.out.println("Список задач пуст");
         } else {
             if (!epics.isEmpty()) {
@@ -85,12 +70,12 @@ public class TaskManager {
 
     // получить список задач
     public ArrayList<Task> getAllTasks() {
-        return new ArrayList<Task> (this.tasks.values());
+        return new ArrayList<Task>(this.tasks.values());
     }
 
     // получить список эпиков
     public ArrayList<Epic> getAllEpics() {
-        return new ArrayList<Epic> (this.epics.values());
+        return new ArrayList<Epic>(this.epics.values());
     }
 
     // получить список подзадач по эпику
@@ -106,7 +91,7 @@ public class TaskManager {
 
     // получить список подзадач
     public ArrayList<SubTask> getAllSubTasks() {
-        return new ArrayList<SubTask> (this.subTasks.values());
+        return new ArrayList<SubTask>(this.subTasks.values());
     }
 
     // получить задачу по ID
@@ -124,27 +109,29 @@ public class TaskManager {
         return this.subTasks.get(id);
     }
 
+    // удалить всё
+    public void deleteAll() {
+        this.tasks.clear();
+        this.epics.clear();
+        this.subTasks.clear();
+    }
+
     // удалить все задачи
-    public void deleteAll(Type type) {
-        switch (type) {
-            case ALL:
-                this.tasks.clear();
-                this.epics.clear();
-                this.subTasks.clear();
-                break;
-            case EPIC:
-                this.epics.clear();
-                this.subTasks.clear();
-                break;
-            case TASK:
-                this.tasks.clear();
-                break;
-            case SUBTASK:
-                this.subTasks.clear();
-                for (int id : epics.keySet()) {
-                    updateEpicOnChange(id);
-                }
-                break;
+    public void deleteAllTasks() {
+        this.tasks.clear();
+    }
+
+    // удалить все эпики
+    public void deleteAllEpics() {
+        this.epics.clear();
+        this.subTasks.clear();
+    }
+
+    // удалить все подзадачи
+    public void deleteAllSubTasks() {
+        this.subTasks.clear();
+        for (int id : epics.keySet()) {
+            updateEpicOnChange(id);
         }
     }
 
@@ -166,8 +153,7 @@ public class TaskManager {
                     this.subTasks.remove(k);
                 }
             }
-        }
-        {
+        } else {
             System.out.println("Эпик с таким ID не найден");
         }
     }
@@ -183,75 +169,52 @@ public class TaskManager {
         }
     }
 
-    // обновить задачу
-    private int getTaskByName(String name) {
-        for (int key : tasks.keySet()) {
-            if (Objects.equals(tasks.get(key).getName(), name)) {
-                return tasks.get(key).getId();
+    // удалить подзадачи по эпик ID
+    public void deleteSubTasksByEpicId(int epicId){
+        if (this.epics.containsKey(epicId)) {
+            Epic epic = this.epics.get(epicId);
+            for (int id : epic.getSubTasks()) {
+                deleteSubTaskById(id);
             }
         }
-        return -1;
     }
 
-    public void updateTask (Task task) {
-        int oldTaskId = getTaskByName(task.getName());
-        if (oldTaskId != -1) {
-            task.setId(oldTaskId);
-            tasks.put(oldTaskId, task);
+    // обновить задачу
+    public void updateTask(Task task) {
+        if (this.tasks.containsKey(task.getId())) {
+            tasks.put(task.getId(), task);
         } else {
-            System.out.println("Задачи с таким названием нет: " + task.getName());
+            System.out.println("Задача не обновлена. Не найдена задача с ID - " + task.getId());
         }
     }
 
     // обновить эпик
-    private int getEpicByName(String name) {
-        for (int key : epics.keySet()) {
-            if (Objects.equals(epics.get(key).getName(), name)) {
-                return epics.get(key).getId();
-            }
-        }
-        return -1;
-    }
-
-    public void updateEpic (Epic epic) {
-        int oldEpicId = getEpicByName(epic.getName());
-        if (oldEpicId != -1) {
-            epic.setId(oldEpicId);
-            epics.put(oldEpicId, epic);
+    public void updateEpic(Epic epic) {
+        if (this.epics.containsKey(epic.getId())) {
+            deleteSubTasksByEpicId(epic.getId());
+            epics.put(epic.getId(), epic);
         } else {
-            System.out.println("Эписка с таким названием нет: " + epic.getName());
+            System.out.println("Эпик не обновлен. Не найден эпик с ID - " + epic.getId());
         }
+
     }
 
     // обновить подзадачу
-    private int getSubTaskByName(String name, int epicId) {
-        for (int key : subTasks.keySet()) {
-            SubTask subTask = subTasks.get(key);
-            if (Objects.equals(subTask.getName(), name) && subTask.getEpic() == epicId) {
-                return subTask.getId();
-            }
-        }
-        return -1;
-    }
-
     public void updateSubTask(SubTask subTask) {
-        // int id, SubTask subTask, Status status
-        if (subTask.getEpic() != 0) {
-            int oldSubTaskId = getSubTaskByName(subTask.getName(), subTask.getEpic());
-            if (oldSubTaskId != -1) {
-                subTask.setId(oldSubTaskId);
-                subTasks.put(oldSubTaskId, subTask);
+        if (subTask.getEpic() != 0 && this.epics.containsKey(subTask.getEpic())) {
+            if (this.subTasks.containsKey(subTask.getId())) {
+                subTasks.put(subTask.getId(), subTask);
                 updateEpicOnChange(subTask.getEpic());
             } else {
-                System.out.println("Подзадачи с таким названием нет: " + subTask.getName());
+                System.out.println("Подзадача не обновлена. Не найдена подзадача с ID - " + subTask.getId());
             }
         } else {
-            System.out.println("Подзадача должна содержать ссылку на эпик: " + subTask.getName());
+            System.out.println("Подзадача не обновлена. Подзадача должна содержать ссылку на существующий эпик");
         }
     }
 
     // обновить статус эпика при обновлении подзадач
-    private void updateEpicOnChange(int epicId){
+    private void updateEpicOnChange(int epicId) {
         int size = 0;
         int countNew = 0;
         int countDone = 0;
@@ -277,36 +240,6 @@ public class TaskManager {
             }
             epics.put(epicId, epic);
         }
-    }
-
-    // проверка на уникальность ID
-    private boolean isUnique(Object task) {
-        String type = task.getClass().getName();
-        switch (type) {
-            case "com.yandex.taskmanager.Task" -> {
-                for (int k : tasks.keySet()) {
-                    if (tasks.get(k).equals(task)) {
-                        return false;
-                    }
-                }
-            }
-            case "com.yandex.taskmanager.Epic" -> {
-                for (int k : epics.keySet()) {
-                    if (epics.get(k).equals(task)) {
-                        return false;
-                    }
-                }
-            }
-            case "com.yandex.taskmanager.SubTask" -> {
-                for (int k : subTasks.keySet()) {
-                    SubTask sub = (SubTask) task;
-                    if (subTasks.get(k).equals(sub)) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     // генератор ID

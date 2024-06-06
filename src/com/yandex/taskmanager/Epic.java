@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
     private ArrayList<Integer> subTasks = new ArrayList<>();
+
     public Epic(String name, String description) {
         super(name, description);
     }
@@ -16,15 +17,21 @@ public class Epic extends Task {
         this.subTasks = subTasks;
     }
 
-    protected void AddSubTask(int subTask) {
+    protected void addSubTask(int subTask) {
         this.subTasks.add(subTask);
     }
 
+    protected void clearSubTasks() {
+        subTasks.clear();
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Epic epic = (Epic) o;
-        return super.equals(o);
+    public String toString() {
+        return "Epic {" +
+                "id='" + getId() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status='" + getStatus() + '\'' +
+                ", subTasks='" + getSubTasks() + '\'' + '}';
     }
 }
