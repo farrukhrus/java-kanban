@@ -1,15 +1,20 @@
-package com.yandex.taskmanager;
+package com.yandex.model;
+
+import com.yandex.taskmanager.Epic;
+import com.yandex.taskmanager.Status;
+import com.yandex.taskmanager.SubTask;
+import com.yandex.taskmanager.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TaskManager {
+public class Service {
     private static int counter = 1;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, SubTask> subTasks;
 
-    public TaskManager() {
+    public Service() {
         epics = new HashMap<>();
         tasks = new HashMap<>();
         subTasks = new HashMap<>();
@@ -176,6 +181,7 @@ public class TaskManager {
             for (int id : epic.getSubTasks()) {
                 deleteSubTaskById(id);
             }
+            updateEpicOnChange(epicId);
         }
     }
 

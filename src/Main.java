@@ -1,12 +1,12 @@
 import com.yandex.taskmanager.Epic;
 import com.yandex.taskmanager.SubTask;
 import com.yandex.taskmanager.Task;
-import com.yandex.taskmanager.TaskManager;
+import com.yandex.model.Service;
 
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager tm = new TaskManager();
+        Service tm = new Service();
 
         // ========== Задачи ========== //
         // создание задачи
@@ -25,7 +25,6 @@ public class Main {
         // обновление эпика
         Epic e2 = new Epic("epic1", "epic1_after");
         e2.setId(e1.getId());
-        e2.setSubTasks(e1.getSubTasks());
         tm.updateEpic(e2);
 
 

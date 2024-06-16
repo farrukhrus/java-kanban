@@ -3,7 +3,7 @@ package com.yandex.taskmanager;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subTasks = new ArrayList<>();
+    private final ArrayList<Integer> subTasks = new ArrayList<>();
 
     public Epic(String name, String description) {
         super(name, description);
@@ -13,11 +13,7 @@ public class Epic extends Task {
         return subTasks;
     }
 
-    public void setSubTasks(ArrayList<Integer> subTasks) {
-        this.subTasks = subTasks;
-    }
-
-    protected void addSubTask(int subTask) {
+    public void addSubTask(int subTask) {
         this.subTasks.add(subTask);
     }
 
