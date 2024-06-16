@@ -7,20 +7,30 @@ import com.yandex.taskmanager.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class Service {
+public class InMemoryTaskManager implements TaskManager {
     private static int counter = 1;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, SubTask> subTasks;
+    private final HistoryManager historyManager;
 
-    public Service() {
+    public InMemoryTaskManager() {
         epics = new HashMap<>();
         tasks = new HashMap<>();
         subTasks = new HashMap<>();
+        this.historyManager = new InMemoryHistoryManager();
+    }
+
+    // получить историю просмотров
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 
     // создать задачу
+    @Override
     public void addTask(Task task) {
         int taskId = generateId();
         task.setId(taskId);
@@ -28,6 +38,7 @@ public class Service {
     }
 
     // создать эпик
+    @Override
     public void addEpic(Epic epic) {
         int epicId = generateId();
         epic.setId(epicId);
@@ -35,6 +46,7 @@ public class Service {
     }
 
     // создачу подзадачу в эпике
+    @Override
     public void addSubTask(SubTask subTask) {
         int subTaskId = generateId();
         subTask.setId(subTaskId);
@@ -51,6 +63,7 @@ public class Service {
     }
 
     // вывести на экран все таски
+    @Override
     public void printAll() {
         if (this.tasks.isEmpty() && this.epics.isEmpty()) {
             System.out.println("Список задач пуст");
@@ -74,16 +87,19 @@ public class Service {
     }
 
     // получить список задач
+    @Override
     public ArrayList<Task> getAllTasks() {
         return new ArrayList<Task>(this.tasks.values());
     }
 
     // получить список эпиков
+    @Override
     public ArrayList<Epic> getAllEpics() {
         return new ArrayList<Epic>(this.epics.values());
     }
 
     // получить список подзадач по эпику
+    @Override
     public ArrayList<SubTask> getAllSubTasksByEpic(int epicId) {
         ArrayList<SubTask> subs = new ArrayList<>();
         for (int k : subTasks.keySet()) {
@@ -95,26 +111,31 @@ public class Service {
     }
 
     // получить список подзадач
+    @Override
     public ArrayList<SubTask> getAllSubTasks() {
         return new ArrayList<SubTask>(this.subTasks.values());
     }
 
     // получить задачу по ID
+    @Override
     public Task getTaskById(int id) {
         return this.tasks.get(id);
     }
 
     // получить эпик по ID
+    @Override
     public Epic getEpicById(int id) {
         return this.epics.get(id);
     }
 
     // получить подзадачу по ID
+    @Override
     public SubTask getSubTaskById(int id) {
         return this.subTasks.get(id);
     }
 
     // удалить всё
+    @Override
     public void deleteAll() {
         this.tasks.clear();
         this.epics.clear();
@@ -122,17 +143,20 @@ public class Service {
     }
 
     // удалить все задачи
+    @Override
     public void deleteAllTasks() {
         this.tasks.clear();
     }
 
     // удалить все эпики
+    @Override
     public void deleteAllEpics() {
         this.epics.clear();
         this.subTasks.clear();
     }
 
     // удалить все подзадачи
+    @Override
     public void deleteAllSubTasks() {
         this.subTasks.clear();
         for (int id : epics.keySet()) {
@@ -141,6 +165,7 @@ public class Service {
     }
 
     // удалить задачу
+    @Override
     public void deleteTaskById(int id) {
         if (tasks.get(id) != null) {
             this.tasks.remove(id);
@@ -150,6 +175,7 @@ public class Service {
     }
 
     // удалить эпик
+    @Override
     public void deleteEpicById(int id) {
         if (epics.get(id) != null) {
             this.epics.remove(id);
@@ -164,6 +190,7 @@ public class Service {
     }
 
     // удалить подазачу
+    @Override
     public void deleteSubTaskById(int id) {
         if (subTasks.get(id) != null) {
             SubTask sub = subTasks.get(id);
@@ -175,6 +202,7 @@ public class Service {
     }
 
     // удалить подзадачи по эпик ID
+    @Override
     public void deleteSubTasksByEpicId(int epicId){
         if (this.epics.containsKey(epicId)) {
             Epic epic = this.epics.get(epicId);
@@ -186,6 +214,7 @@ public class Service {
     }
 
     // обновить задачу
+    @Override
     public void updateTask(Task task) {
         if (this.tasks.containsKey(task.getId())) {
             tasks.put(task.getId(), task);
@@ -195,6 +224,7 @@ public class Service {
     }
 
     // обновить эпик
+    @Override
     public void updateEpic(Epic epic) {
         if (this.epics.containsKey(epic.getId())) {
             deleteSubTasksByEpicId(epic.getId());
@@ -206,6 +236,7 @@ public class Service {
     }
 
     // обновить подзадачу
+    @Override
     public void updateSubTask(SubTask subTask) {
         if (subTask.getEpic() != 0 && this.epics.containsKey(subTask.getEpic())) {
             if (this.subTasks.containsKey(subTask.getId())) {
@@ -220,7 +251,7 @@ public class Service {
     }
 
     // обновить статус эпика при обновлении подзадач
-    private void updateEpicOnChange(int epicId) {
+    void updateEpicOnChange(int epicId) {
         int size = 0;
         int countNew = 0;
         int countDone = 0;
@@ -249,7 +280,7 @@ public class Service {
     }
 
     // генератор ID
-    private int generateId() {
-        return counter++;
+    int generateId() {
+        return InMemoryTaskManager.counter++;
     }
 }

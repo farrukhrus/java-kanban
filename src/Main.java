@@ -1,12 +1,12 @@
 import com.yandex.taskmanager.Epic;
 import com.yandex.taskmanager.SubTask;
 import com.yandex.taskmanager.Task;
-import com.yandex.model.Service;
+import com.yandex.model.InMemoryTaskManager;
 
 public class Main {
 
     public static void main(String[] args) {
-        Service tm = new Service();
+        InMemoryTaskManager tm = new InMemoryTaskManager();
 
         // ========== Задачи ========== //
         // создание задачи
