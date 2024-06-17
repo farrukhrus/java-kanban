@@ -52,17 +52,29 @@ public class Main {
         System.out.println(tm.getTaskById(task1.getId()));
         System.out.println(tm.getTaskById(task2.getId()));
         System.out.println(tm.getEpicById(e2.getId()));
+        System.out.println(tm.getTaskById(100));
+
+        // вывод всех типов задач на печать
+        tm.printAll();
 
         // получить историю просмотра
         List<Task> history = tm.getHistory();
         System.out.println("\nИстория\nКол-во просмотров: " + history.size() + "\n");
 
-        // вывод всех типов задач на печать
-        tm.printAll();
+        tm.getEpicById(e1.getId());
+        tm.getEpicById(e2.getId());
+        tm.getTaskById(task1.getId());
+        tm.getSubTaskById(t3.getId());
+        tm.getSubTaskById(t3.getId());
+        tm.getSubTaskById(t3.getId());
+        tm.getSubTaskById(t3.getId());
+        tm.getSubTaskById(t3.getId());
+        tm.getSubTaskById(t3.getId());
 
-        System.out.println(tm.getEpicById(e1.getId()));
-        System.out.println(tm.getTaskById(task1.getId()));
-        System.out.println(tm.getSubTaskById(t3.getId()));
+        // история просмотра не больше 10 записей
+        history = tm.getHistory();
+        System.out.println("\nИстория\nКол-во просмотров: " + history.size() + "\n");
+
         // удалить все задачи эпики
         tm.deleteAllEpics();
         tm.printAll();

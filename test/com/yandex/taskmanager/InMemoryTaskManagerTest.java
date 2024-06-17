@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class InMemoryHistoryManagerTest {
     private final InMemoryTaskManager manager = new InMemoryTaskManager();
 
-    Task task1;
+    private Task task1;
 
     @BeforeEach
     public void dataInit() {
