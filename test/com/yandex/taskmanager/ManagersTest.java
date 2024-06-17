@@ -1,17 +1,17 @@
-package com.yandex.model;
+package com.yandex.taskmanager;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class ManagersTest {
     @Test
-    void utilityClassReturnsReadyToUseInstances() {
+    public void utilityClassReturnsReadyToUseInstances() {
         // Утилитарный класс всегда возвращает готовый к работе экземпляр TaskManager
         Assertions.assertNotNull(Managers.getDefault());
     }
 
     @Test
-    void methodGetDefaultHistoryIsNotNull() {
+    public void methodGetDefaultHistoryIsNotNull() {
         // Утилитарный класс всегда возвращает готовый к работе экземпляр HistoryManager
         Assertions.assertNotNull(Managers.getDefaultHistory());
     }

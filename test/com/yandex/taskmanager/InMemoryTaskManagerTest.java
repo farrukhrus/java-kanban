@@ -1,9 +1,9 @@
 
-package com.yandex.model;
+package com.yandex.taskmanager;
 
-import com.yandex.taskmanager.Epic;
-import com.yandex.taskmanager.Task;
-import com.yandex.taskmanager.SubTask;
+import com.yandex.model.Epic;
+import com.yandex.model.Task;
+import com.yandex.model.SubTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,19 +11,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class InMemoryHistoryManagerTest {
-    InMemoryTaskManager manager = new InMemoryTaskManager();
+    private final InMemoryTaskManager manager = new InMemoryTaskManager();
 
-    Epic epic1;
     Task task1;
-    Task task2;
-    SubTask subTask1;
 
     @BeforeEach
     public void dataInit() {
         task1 = new Task("Спать", "Крепко спать");
-        task2 = new Task("Есть", "Сытно есть");
-        epic1 = new Epic("Работать", "Усердно работать");
-        subTask1 = new SubTask("Кодить", "Безудержно кодить");
+        Task task2 = new Task("Есть", "Сытно есть");
+        Epic epic1 = new Epic("Работать", "Усердно работать");
+        SubTask subTask1 = new SubTask("Кодить", "Безудержно кодить");
 
         manager.addEpic(epic1);
         manager.addTask(task1);

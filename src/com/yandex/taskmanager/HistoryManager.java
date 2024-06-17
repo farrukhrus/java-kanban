@@ -1,7 +1,7 @@
-package com.yandex.model;
+package com.yandex.taskmanager;
 
 import java.util.List;
-import com.yandex.taskmanager.Task;
+import com.yandex.model.Task;
 
 public interface HistoryManager {
     // пометить задачу как просмотренную

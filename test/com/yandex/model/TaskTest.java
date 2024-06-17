@@ -1,4 +1,4 @@
-package com.yandex.taskmanager;
+package com.yandex.model;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TaskTest {
 
     @Test
-    void tasksAreEqualToEachOtherIfTheirIdAreEqual() {
+    public void tasksAreEqualToEachOtherIfTheirIdAreEqual() {
         // Экземпляры класса Task равны друг другу, если равен их id
         Task task1 = new Task("Поспать утром", "Важное дело #1");
         Task task2 = new Task("Поспать днём", "Важное дело #1 v2");

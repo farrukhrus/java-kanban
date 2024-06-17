@@ -1,37 +1,36 @@
-package com.yandex.model;
+package com.yandex.taskmanager;
 
-import com.yandex.taskmanager.Epic;
-import com.yandex.taskmanager.Status;
-import com.yandex.taskmanager.SubTask;
-import com.yandex.taskmanager.Task;
+import com.yandex.model.Epic;
+import com.yandex.model.SubTask;
+import com.yandex.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
     // создать задачу
-    void addTask(Task task);
+    Task addTask(Task task);
 
     // создать эпик
-    void addEpic(Epic epic);
+    Epic addEpic(Epic epic);
 
     // создачу подзадачу в эпике
-    void addSubTask(SubTask subTask);
+    SubTask addSubTask(SubTask subTask);
 
     // вывести на экран все таски
     void printAll();
 
     // получить список задач
-    ArrayList<Task> getAllTasks();
+    List<Task> getAllTasks();
 
     // получить список эпиков
-    ArrayList<Epic> getAllEpics();
-
-    // получить список подзадач по эпику
-    ArrayList<SubTask> getAllSubTasksByEpic(int epicId);
+    List<Epic> getAllEpics();
 
     // получить список подзадач
-    ArrayList<SubTask> getAllSubTasks();
+    List<SubTask> getAllSubTasks();
+
+    // получить список подзадач по эпику
+    List<SubTask> getAllSubTasksByEpic(int epicId);
 
     // получить задачу по ID
     Task getTaskById(int id);

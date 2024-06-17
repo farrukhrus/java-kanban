@@ -1,4 +1,4 @@
-package com.yandex.taskmanager;
+package com.yandex.model;
 
 public enum Status {
     NEW,

@@ -1,4 +1,4 @@
-package com.yandex.model;
+package com.yandex.taskmanager;
 
 public class Managers {
     public static TaskManager getDefault() {

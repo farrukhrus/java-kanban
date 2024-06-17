@@ -1,7 +1,9 @@
-import com.yandex.taskmanager.Epic;
-import com.yandex.taskmanager.SubTask;
-import com.yandex.taskmanager.Task;
-import com.yandex.model.InMemoryTaskManager;
+import com.yandex.model.Epic;
+import com.yandex.model.SubTask;
+import com.yandex.model.Task;
+import com.yandex.taskmanager.InMemoryTaskManager;
+
+import java.util.List;
 
 public class Main {
 
@@ -17,6 +19,8 @@ public class Main {
         task2.setId(task1.getId());
         tm.updateTask(task2);
 
+        Task task3 = tm.addTask(new Task("task3", "333"));
+        System.out.println(task3);
 
         // ========== Эпики ========== //
         // создание эпика
@@ -42,10 +46,16 @@ public class Main {
         tm.updateSubTask(t3);
 
         // получить список подзадач по эпику
-        // System.out.println( tm.getAllSubTasksByEpic(0) );
+        System.out.println( tm.getAllSubTasksByEpic(0) );
 
         // получить эпик/задачу/подзадачу по ID
-        // System.out.println( tm.getTaskById(task1.getId()) );
+        System.out.println(tm.getTaskById(task1.getId()));
+        System.out.println(tm.getTaskById(task2.getId()));
+        System.out.println(tm.getEpicById(e2.getId()));
+
+        // получить историю просмотра
+        List<Task> history = tm.getHistory();
+        System.out.println("\nИстория\nКол-во просмотров: " + history.size() + "\n");
 
         // вывод всех типов задач на печать
         tm.printAll();

@@ -1,4 +1,4 @@
-package com.yandex.taskmanager;
+package com.yandex.model;
 
 import org.junit.jupiter.api.Test;
 
@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class EpicTest {
 
     @Test
-    void epicsAreEqualToEachOtherIfTheirIdAreEqual() {
+    public void epicsAreEqualToEachOtherIfTheirIdAreEqual() {
         // Экземпляры класса Epic равны друг другу, если равен их id
         Epic epic1 = new Epic("Сдать спринт", "Сдать спринт,чтобы пройти дальше по программе");
         Epic epic2 = new Epic("Сдать ", "Сдать ");

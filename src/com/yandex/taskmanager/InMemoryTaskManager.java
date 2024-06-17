@@ -1,9 +1,9 @@
-package com.yandex.model;
+package com.yandex.taskmanager;
 
-import com.yandex.taskmanager.Epic;
-import com.yandex.taskmanager.Status;
-import com.yandex.taskmanager.SubTask;
-import com.yandex.taskmanager.Task;
+import com.yandex.model.Epic;
+import com.yandex.model.Status;
+import com.yandex.model.SubTask;
+import com.yandex.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,23 +31,25 @@ public class InMemoryTaskManager implements TaskManager {
 
     // создать задачу
     @Override
-    public void addTask(Task task) {
+    public Task addTask(Task task) {
         int taskId = generateId();
         task.setId(taskId);
         this.tasks.put(taskId, task);
+        return task;
     }
 
     // создать эпик
     @Override
-    public void addEpic(Epic epic) {
+    public Epic addEpic(Epic epic) {
         int epicId = generateId();
         epic.setId(epicId);
         this.epics.put(epicId, epic);
+        return epic;
     }
 
     // создачу подзадачу в эпике
     @Override
-    public void addSubTask(SubTask subTask) {
+    public SubTask addSubTask(SubTask subTask) {
         int subTaskId = generateId();
         subTask.setId(subTaskId);
         if (subTask.getEpic() != 0 && this.epics.containsKey(subTask.getEpic())) {
@@ -55,11 +57,11 @@ public class InMemoryTaskManager implements TaskManager {
             epic.addSubTask(subTaskId);
             this.subTasks.put(subTaskId, subTask);
             updateEpicOnChange(epic.getId());
+            return subTask;
         } else {
             System.out.println("Подзадача не создана. Подзадача должна содержать ссылку на существующий эпик");
         }
-
-
+        return null;
     }
 
     // вывести на экран все таски
@@ -119,19 +121,25 @@ public class InMemoryTaskManager implements TaskManager {
     // получить задачу по ID
     @Override
     public Task getTaskById(int id) {
-        return this.tasks.get(id);
+        Task task = this.tasks.get(id);
+        historyManager.add(task);
+        return task;
     }
 
     // получить эпик по ID
     @Override
     public Epic getEpicById(int id) {
-        return this.epics.get(id);
+        Epic epic = this.epics.get(id);
+        historyManager.add(epic);
+        return epic;
     }
 
     // получить подзадачу по ID
     @Override
     public SubTask getSubTaskById(int id) {
-        return this.subTasks.get(id);
+        SubTask subTask = this.subTasks.get(id);
+        historyManager.add(subTask);
+        return subTask;
     }
 
     // удалить всё

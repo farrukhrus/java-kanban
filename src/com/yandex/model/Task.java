@@ -1,4 +1,4 @@
-package com.yandex.taskmanager;
+package com.yandex.model;
 
 import java.util.Objects;
 
