@@ -20,7 +20,7 @@ public class Main {
         tm.updateTask(task2);
 
         Task task3 = tm.addTask(new Task("task3", "333"));
-        System.out.println(task3);
+        // System.out.println(task3);
 
         // ========== Эпики ========== //
         // создание эпика
@@ -46,21 +46,25 @@ public class Main {
         tm.updateSubTask(t3);
 
         // получить список подзадач по эпику
-        System.out.println( tm.getAllSubTasksByEpic(0) );
+        // System.out.println( tm.getAllSubTasksByEpic(0) );
 
         // получить эпик/задачу/подзадачу по ID
-        System.out.println(tm.getTaskById(task1.getId()));
-        System.out.println(tm.getTaskById(task2.getId()));
-        System.out.println(tm.getEpicById(e2.getId()));
-        System.out.println(tm.getTaskById(100));
+        tm.getTaskById(task1.getId());
+        tm.getTaskById(task2.getId());
+        tm.getEpicById(e2.getId());
+        tm.getTaskById(100);
+        tm.getEpicById(e2.getId());
 
 
         // вывод всех типов задач на печать
-        tm.printAll();
+        // tm.printAll();
 
         // получить историю просмотра
         List<Task> history = tm.getHistory();
-        System.out.println("\nИстория\nКол-во просмотров: " + history.size() + "\n");
+        System.out.println("\nИстория\nКол-во просмотров I: " + history.size() + "\n");
+        for (var item : history){
+            System.out.println(item);
+        }
 
         tm.getEpicById(e1.getId());
         tm.getEpicById(e2.getId());
@@ -71,20 +75,25 @@ public class Main {
         tm.getSubTaskById(t3.getId());
         tm.getSubTaskById(t3.getId());
         tm.getSubTaskById(t3.getId());
+        tm.getTaskById(task1.getId());
 
         // история просмотра не больше 10 записей
         history = tm.getHistory();
-        System.out.println("\nИстория\nКол-во просмотров: " + history.size() + "\n");
+        System.out.println("\nИстория\nКол-во просмотров II: " + history.size() + "\n");
+        //System.out.println(history);
+        for (var item : history){
+            System.out.println(item);
+        }
 
         // удалить все задачи эпики
         tm.deleteAllEpics();
-        tm.printAll();
+        // tm.printAll();
 
         // удалить по ID
         tm.deleteTaskById(task2.getId());
         // tm.deleteSubTaskById(t4.getId());
         // tm.deleteTaskById(task1.getId());
 
-        tm.printAll();
+        // tm.printAll();
     }
 }

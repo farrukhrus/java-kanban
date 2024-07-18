@@ -2,25 +2,82 @@ package com.yandex.taskmanager;
 
 import com.yandex.model.Task;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> history = new LinkedList<>();
-    private static final int MAX_SIZE = 10;
+    private final Map<Integer, Node> history = new HashMap<>();
+    // private static final int MAX_SIZE = 10;
+    private Node head;
+    private Node tail;
 
-    @Override
-    public void add(Task task) {
-        if(history.size()==MAX_SIZE) {
-            history.remove(0);
-        }
-        if (task != null) {
-            history.add(task);
+    private static class Node {
+        Task task;
+        Node prev;
+        Node next;
+
+        Node(Task task) {
+            this.task = task;
         }
     }
 
     @Override
-    public  List<Task> getHistory() {
-        return List.copyOf(history);
+    public void add(Task task) {
+        if (task != null) {
+            if (history.containsKey(task.getId())) {
+                remove(task.getId());
+            }
+            Node node = new Node(task);
+            if (tail == null) {
+                head = node;
+            } else {
+                tail.next = node;
+                node.prev = tail;
+            }
+            tail = node;
+            history.put(task.getId(), node);
+        }
+    }
+
+    @Override
+    public void remove(int id) {
+        if (history.containsKey(id)) {
+            Node node = history.get(id);
+            final Node prev = node.prev;
+            final Node next = node.next;
+
+            if (prev == null && next == null) {
+                tail = null;
+                head = null;
+                return;
+            }
+
+            if (prev == null) {
+                head = next;
+            } else {
+                prev.next = next;
+            }
+
+            if (next == null) {
+                tail = prev;
+            } else {
+                next.prev = prev;
+            }
+
+            history.remove(id);
+        }
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        List<Task> history = new ArrayList<>();
+        Node node = head;
+        while (node != null) {
+            history.add(node.task);
+            node = node.next;
+        }
+        return history;
     }
 }
