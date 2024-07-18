@@ -54,6 +54,7 @@ public class Main {
         System.out.println(tm.getEpicById(e2.getId()));
         System.out.println(tm.getTaskById(100));
 
+
         // вывод всех типов задач на печать
         tm.printAll();
 
