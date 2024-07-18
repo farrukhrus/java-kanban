@@ -211,7 +211,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // удалить подзадачи по эпик ID
     @Override
-    public void deleteSubTasksByEpicId(int epicId){
+    public void deleteSubTasksByEpicId(int epicId) {
         if (this.epics.containsKey(epicId)) {
             Epic epic = this.epics.get(epicId);
             for (int id : epic.getSubTasks()) {

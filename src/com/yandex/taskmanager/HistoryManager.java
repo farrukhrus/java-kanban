@@ -1,6 +1,7 @@
 package com.yandex.taskmanager;
 
 import java.util.List;
+
 import com.yandex.model.Task;
 
 public interface HistoryManager {

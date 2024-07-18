@@ -62,7 +62,7 @@ public class Main {
         // получить историю просмотра
         List<Task> history = tm.getHistory();
         System.out.println("\nИстория\nКол-во просмотров I: " + history.size() + "\n");
-        for (var item : history){
+        for (var item : history) {
             System.out.println(item);
         }
 
@@ -81,7 +81,7 @@ public class Main {
         history = tm.getHistory();
         System.out.println("\nИстория\nКол-во просмотров II: " + history.size() + "\n");
         //System.out.println(history);
-        for (var item : history){
+        for (var item : history) {
             System.out.println(item);
         }
 
