@@ -5,6 +5,7 @@ import com.yandex.model.Epic;
 import com.yandex.model.Task;
 import com.yandex.model.SubTask;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,8 +33,8 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    @DisplayName("Проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер")
     public void taskIsUnchangedAfterAddingToManager() {
-        // Проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
         Task savedTask = manager.getTaskById(task1.getId());
 
         assertNotNull(savedTask);
@@ -44,8 +45,8 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    @DisplayName("Задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера")
     public void givenAndGeneratedIdsDoNotConflict() {
-        //задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера
         Task task3 = new Task("Учиться", "Добросовестно учиться");
         task3.setId(8);
         manager.addTask(task3);

@@ -16,9 +16,6 @@ public interface TaskManager {
     // создачу подзадачу в эпике
     SubTask addSubTask(SubTask subTask);
 
-    // вывести на экран все таски
-    void printAll();
-
     // получить список задач
     List<Task> getAllTasks();
 

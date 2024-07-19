@@ -55,10 +55,6 @@ public class Main {
         tm.getTaskById(100);
         tm.getEpicById(e2.getId());
 
-
-        // вывод всех типов задач на печать
-        // tm.printAll();
-
         // получить историю просмотра
         List<Task> history = tm.getHistory();
         System.out.println("\nИстория\nКол-во просмотров I: " + history.size() + "\n");
@@ -87,13 +83,10 @@ public class Main {
 
         // удалить все задачи эпики
         tm.deleteAllEpics();
-        // tm.printAll();
 
         // удалить по ID
         tm.deleteTaskById(task2.getId());
         // tm.deleteSubTaskById(t4.getId());
         // tm.deleteTaskById(task1.getId());
-
-        // tm.printAll();
     }
 }
