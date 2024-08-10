@@ -2,6 +2,8 @@ import com.yandex.model.Epic;
 import com.yandex.model.SubTask;
 import com.yandex.model.Task;
 import com.yandex.taskmanager.FileBackedTaskManager;
+import com.yandex.taskmanager.Managers;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,11 +13,12 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Path path = Paths.get("src", "data.csv");
+        Path path = Paths.get("resources", "data.csv");
         if (!Files.exists(path)) {
             Files.createFile(path);
         }
-        final FileBackedTaskManager tm = FileBackedTaskManager.loadFromFile(path.toFile());
+        final FileBackedTaskManager tm = Managers.getDefaultFileBackedTaskManager(path);
+        FileBackedTaskManager.loadFromFile(path.toFile());
         //final FileBackedTaskManager tm = new FileBackedTaskManager(path.toFile());
 
         // ========== Задачи ========== //

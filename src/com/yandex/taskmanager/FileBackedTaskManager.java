@@ -22,7 +22,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             for (Task task : getAllTasks()) {
                 bw.write(task.toCSV() + "\n");
             }
-
             for (Epic epic : getAllEpics()) {
                 bw.write(epic.toCSV() + "\n");
             }
@@ -88,20 +87,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Task addTask(Task task) {
+        Task t = super.addTask(task);
         save();
-        return super.addTask(task);
+        return t;
+
     }
 
     @Override
     public Epic addEpic(Epic epic) {
+        Epic t = super.addEpic(epic);
         save();
-        return super.addEpic(epic);
+        return t;
     }
 
     @Override
     public SubTask addSubTask(SubTask subtask) {
+        SubTask t = super.addSubTask(subtask);
         save();
-        return super.addSubTask(subtask);
+        return t;
     }
 
     @Override
@@ -160,19 +163,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        save();
         return super.getTaskById(id);
     }
 
     @Override
     public Epic getEpicById(int id) {
-        save();
         return super.getEpicById(id);
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        save();
         return super.getSubTaskById(id);
     }
 }

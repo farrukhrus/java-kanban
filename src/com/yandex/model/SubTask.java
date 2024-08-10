@@ -2,14 +2,17 @@ package com.yandex.model;
 
 public class SubTask extends Task {
     private int epic;
+    private final TaskType taskType;
 
     public SubTask(String name, String description) {
         super(name, description);
+        this.taskType = TaskType.SUBTASK;
     }
 
     public SubTask(int id, String name, String description, Status status, int epic) {
         super(id, name, description, status);
         this.epic = epic;
+        this.taskType = TaskType.SUBTASK;
     }
 
     public int getEpic() {
@@ -21,7 +24,7 @@ public class SubTask extends Task {
     }
 
     public TaskType getType() {
-        return TaskType.SUBTASK;
+        return taskType;
     }
 
     @Override

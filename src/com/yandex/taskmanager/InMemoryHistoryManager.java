@@ -7,21 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+class Node {
+    protected Task task;
+    protected Node prev;
+    protected Node next;
+
+    protected Node(Task task) {
+        this.task = task;
+    }
+}
+
 public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node> history = new HashMap<>();
-    // private static final int MAX_SIZE = 10;
     private Node head;
     private Node tail;
-
-    private static class Node {
-        Task task;
-        Node prev;
-        Node next;
-
-        Node(Task task) {
-            this.task = task;
-        }
-    }
 
     @Override
     public void add(Task task) {

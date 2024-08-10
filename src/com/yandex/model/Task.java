@@ -6,12 +6,14 @@ public class Task {
     private String name;
     private String description;
     private Status status;
+    private final TaskType taskType;
     private int id;
 
     public Task(String name, String description) {
         this.status = Status.NEW;
         this.name = name;
         this.description = description;
+        this.taskType = TaskType.TASK;
     }
 
     public Task(int id, String name, String description, Status status) {
@@ -19,6 +21,7 @@ public class Task {
         this.status = status;
         this.name = name;
         this.description = description;
+        this.taskType = TaskType.TASK;
     }
 
     public void setStatus(Status status) {
@@ -54,7 +57,7 @@ public class Task {
     }
 
     public TaskType getType() {
-        return TaskType.TASK;
+        return taskType;
     }
 
     @Override
