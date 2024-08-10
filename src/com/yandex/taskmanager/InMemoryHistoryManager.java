@@ -7,16 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class Node {
-    protected Task task;
-    protected Node prev;
-    protected Node next;
-
-    protected Node(Task task) {
-        this.task = task;
-    }
-}
-
 public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node> history = new HashMap<>();
     private Node head;
