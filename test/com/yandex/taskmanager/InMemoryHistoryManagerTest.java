@@ -2,6 +2,7 @@ package com.yandex.taskmanager;
 
 import com.yandex.model.Status;
 import com.yandex.model.Task;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,11 +12,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
     private final InMemoryHistoryManager manager = new InMemoryHistoryManager();
+    static HistoryManager hm;
+    static Task task1;
+    static Task task2;
+
+    @BeforeEach
+    void beforeach() {
+        hm = Managers.getDefaultHistory();
+        task1 = new Task("Тренировка", "Силовая тренировка");
+        task2 = new Task("Учеба", "Учиться в поте лица");
+    }
+
 
     @Test
     @DisplayName("Задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.")
     public void newTasksRetainThePreviousState() {
-        Task task1 = new Task("Тренировка", "Силовая тренировка");
+
         manager.add(task1);
 
         task1.setName("Спать");
@@ -33,21 +45,15 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("Задачи успешно добавляются в историю просмотров")
     void testAddNewTask() {
-        HistoryManager historyManager = Managers.getDefaultHistory();
-        Task task = new Task("task1", "555");
-        historyManager.add(task);
-
-        final List<Task> history = historyManager.getHistory();
+        hm.add(task1);
+        final List<Task> history = hm.getHistory();
         assertNotNull(history, "История просмотров обновилась");
     }
 
     @Test
     @DisplayName("Задачи успешно удаляются из истории просмотров")
     public void testAddAndRemoveHistory() {
-        HistoryManager hm = new InMemoryHistoryManager();
-        Task task1 = new Task("task1", "111");
         task1.setId(1);
-        Task task2 = new Task("task2", "222");
         task2.setId(2);
 
         hm.add(task1);
@@ -64,8 +70,6 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("В истории просмотров отсутствуют дубликаты")
     public void testAddDuplicateTask() {
-        HistoryManager hm = new InMemoryHistoryManager();
-        Task task1 = new Task("task1", "111");
         task1.setId(1);
         hm.add(task1);
         hm.add(task1);

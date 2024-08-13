@@ -11,9 +11,9 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private static int counter = 1;
-    private final HashMap<Integer, Epic> epics;
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, SubTask> subTasks;
+    protected final HashMap<Integer, Epic> epics;
+    protected final HashMap<Integer, Task> tasks;
+    protected final HashMap<Integer, SubTask> subTasks;
     private final HistoryManager historyManager;
 
     public InMemoryTaskManager() {

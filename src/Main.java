@@ -1,14 +1,25 @@
 import com.yandex.model.Epic;
 import com.yandex.model.SubTask;
 import com.yandex.model.Task;
-import com.yandex.taskmanager.InMemoryTaskManager;
+import com.yandex.taskmanager.FileBackedTaskManager;
+import com.yandex.taskmanager.Managers;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
-        InMemoryTaskManager tm = new InMemoryTaskManager();
+    public static void main(String[] args) throws IOException {
+        Path path = Paths.get("resources", "data.csv");
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+        }
+        final FileBackedTaskManager tm = Managers.getDefaultFileBackedTaskManager(path);
+        FileBackedTaskManager.loadFromFile(path.toFile());
+        //final FileBackedTaskManager tm = new FileBackedTaskManager(path.toFile());
 
         // ========== Задачи ========== //
         // создание задачи
@@ -82,10 +93,10 @@ public class Main {
         }
 
         // удалить все задачи эпики
-        tm.deleteAllEpics();
+        //tm.deleteAllEpics();
 
         // удалить по ID
-        tm.deleteTaskById(task2.getId());
+        //tm.deleteTaskById(task2.getId());
         // tm.deleteSubTaskById(t4.getId());
         // tm.deleteTaskById(task1.getId());
     }

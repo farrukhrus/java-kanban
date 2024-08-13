@@ -6,12 +6,22 @@ public class Task {
     private String name;
     private String description;
     private Status status;
+    private final TaskType taskType;
     private int id;
 
     public Task(String name, String description) {
         this.status = Status.NEW;
         this.name = name;
         this.description = description;
+        this.taskType = TaskType.TASK;
+    }
+
+    public Task(int id, String name, String description, Status status) {
+        this.id = id;
+        this.status = status;
+        this.name = name;
+        this.description = description;
+        this.taskType = TaskType.TASK;
     }
 
     public void setStatus(Status status) {
@@ -46,6 +56,10 @@ public class Task {
         return status;
     }
 
+    public TaskType getType() {
+        return taskType;
+    }
+
     @Override
     public String toString() {
         return "Task {" +
@@ -53,6 +67,11 @@ public class Task {
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' + '}';
+    }
+
+    public String toCSV() {
+        return (getId() + "," + getType() + "," + getName() + ","
+                + getDescription() + "," + getStatus() + ",");
     }
 
     @Override

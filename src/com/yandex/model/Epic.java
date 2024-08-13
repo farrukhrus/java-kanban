@@ -4,9 +4,16 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
     private final ArrayList<Integer> subTasks = new ArrayList<>();
+    private final TaskType taskType;
 
     public Epic(String name, String description) {
         super(name, description);
+        this.taskType = TaskType.EPIC;
+    }
+
+    public Epic(int id, String name, String description, Status status) {
+        super(id, name, description, status);
+        this.taskType = TaskType.EPIC;
     }
 
     public ArrayList<Integer> getSubTasks() {
@@ -21,6 +28,10 @@ public class Epic extends Task {
         subTasks.clear();
     }
 
+    public TaskType getType() {
+        return taskType;
+    }
+
     @Override
     public String toString() {
         return "Epic {" +
@@ -29,5 +40,10 @@ public class Epic extends Task {
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
                 ", subTasks='" + getSubTasks() + '\'' + '}';
+    }
+
+    public String toCSV() {
+        return (getId() + "," + getType() + "," + getName() + ","
+                + getDescription() + "," + getStatus() + ",");
     }
 }
