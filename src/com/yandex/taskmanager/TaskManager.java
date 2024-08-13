@@ -4,7 +4,6 @@ import com.yandex.model.Epic;
 import com.yandex.model.SubTask;
 import com.yandex.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -16,9 +15,6 @@ public interface TaskManager {
 
     // создачу подзадачу в эпике
     SubTask addSubTask(SubTask subTask);
-
-    // вывести на экран все таски
-    void printAll();
 
     // получить список задач
     List<Task> getAllTasks();
