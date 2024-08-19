@@ -1,6 +1,7 @@
 package com.yandex.taskmanager;
 
 import com.yandex.model.Epic;
+import com.yandex.model.Status;
 import com.yandex.model.SubTask;
 import com.yandex.model.Task;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,9 +30,14 @@ class FileBackedTaskManagerTest {
             Files.createFile(path);
         }
         hm = Managers.getDefaultFileBackedTaskManager(path);
-        task1 = new Task("Тренировка", "Силовая тренировка");
-        epic1 = new Epic("Тренировка", "Силовая тренировка");
-        subTask1 = new SubTask("Тренировка", "Силовая тренировка");
+        task1 = new Task("task1", "task1_before",
+                Status.NEW, Duration.ofSeconds(14),
+                LocalDateTime.of(2024, 8, 19, 20, 9, 25));
+        epic1 = new Epic("epic1", "epic1_before", Status.NEW, Duration.ofSeconds(5000),
+                LocalDateTime.of(2024, 8, 19, 20, 15, 15));
+        subTask1 = new SubTask("subtask1","subtask1_before", Status.NEW, epic1.getId(),
+                LocalDateTime.of(2024, 8, 19, 20, 15, 45),
+                Duration.ofSeconds(50));
     }
 
     @Test

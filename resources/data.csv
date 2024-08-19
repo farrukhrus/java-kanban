@@ -1,4 +1,4 @@
 id,type,name,desc,status,duration,startTime,epic
 1,TASK,task1,task1_before,NEW,PT14S,2024-08-19T20:09:25,
-2,TASK,task3,task3 comment,NEW,PT14S,2024-08-19T21:09:25,
-3,TASK,task4,task4 comment,NEW,PT14S,2024-08-19T22:09:25,
+2,EPIC,epic1,epic1_before,NEW,PT50S,2024-08-19T20:15:45,
+3,SUBTASK,subtask1,subtask1_before,NEW,PT50S,2024-08-19T20:15:45,2
