@@ -68,11 +68,11 @@ public class Main {
         }*/
 
         // вывести список задач
-        for (var item : tm.getAllTasks()){
+        for (var item : tm.getAllTasks()) {
             System.out.println(item);
         }
         System.out.println("######");
-        for (var item : tm.getSorted()){
+        for (var item : tm.getSorted()) {
             System.out.println(item);
         }
 
