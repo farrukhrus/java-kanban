@@ -3,6 +3,7 @@ import com.yandex.model.Status;
 import com.yandex.model.SubTask;
 import com.yandex.model.Task;
 import com.yandex.taskmanager.FileBackedTaskManager;
+import com.yandex.taskmanager.Managers;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -10,7 +11,6 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Main {
 
@@ -19,10 +19,9 @@ public class Main {
         if (!Files.exists(path)) {
             Files.createFile(path);
         }
-        //final FileBackedTaskManager tm = Managers.getDefaultFileBackedTaskManager(path);
-        //FileBackedTaskManager.loadFromFile(path.toFile());
-        final FileBackedTaskManager tm = FileBackedTaskManager.loadFromFile(path.toFile());
-        //final FileBackedTaskManager tm = new FileBackedTaskManager(path.toFile());
+        FileBackedTaskManager tm = Managers.getDefaultFileBackedTaskManager();
+        tm.setFilePath(path.toFile());
+        //FileBackedTaskManager tm = FileBackedTaskManager.loadFromFile(path.toFile());
 
         // ========== Задачи ========== //
         // создание задачи
@@ -41,25 +40,11 @@ public class Main {
                 LocalDateTime.of(2024, 8, 19, 22, 9, 25));
         tm.addTask(task4);
 
-        // вывести список задач
-        /*for (var item : tm.getAllTasks()){
-            System.out.println(item);
-        }
-        System.out.println("######");
-        for (var item : tm.getSorted()){
-            System.out.println(item);
-        }*/
-
         // ========== Эпики ========== //
         // создание эпика
-        Epic e1 = new Epic("epic1", "epic1_before", Status.NEW, Duration.ofSeconds(5000),
-                LocalDateTime.of(2024, 8, 19, 20, 15, 15));
+        Epic e1 = new Epic("epic1", "epic1_before", Status.NEW, Duration.ofSeconds(500),
+                LocalDateTime.of(2024, 8, 20, 23, 15, 15));
         tm.addEpic(e1);
-        // обновление эпика
-        Epic e2 = new Epic("epic1", "epic1_after", Status.NEW, Duration.ofSeconds(5000),
-                LocalDateTime.of(2024, 8, 19, 20, 15, 45));
-        e2.setId(e1.getId());
-        tm.updateEpic(e2);
 
         // ========== Подзадачи ========== //
         SubTask t1 = new SubTask("subtask1","subtask1_before", Status.NEW, e1.getId(),
@@ -74,11 +59,20 @@ public class Main {
         tm.addSubTask(t3);
 
         // история просмотра не больше 10 записей
-        tm.getSubTaskById(5);
+        /*tm.getSubTaskById(5);
         tm.getEpicById(4);
         List<Task> history = tm.getHistory();
         System.out.println("\nИстория\nКол-во просмотров II: " + history.size() + "\n");
         for (var item : history) {
+            System.out.println(item);
+        }*/
+
+        // вывести список задач
+        for (var item : tm.getAllTasks()){
+            System.out.println(item);
+        }
+        System.out.println("######");
+        for (var item : tm.getSorted()){
             System.out.println(item);
         }
 

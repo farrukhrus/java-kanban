@@ -9,10 +9,13 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private final File file;
+    private File file;
 
-    public FileBackedTaskManager(File file) {
+    public FileBackedTaskManager() {
         super();
+    }
+
+    public void setFilePath(File file) {
         this.file = file;
     }
 
@@ -37,7 +40,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     // загрузить данные из файла
     public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager fm = new FileBackedTaskManager(file);
+        FileBackedTaskManager fm = new FileBackedTaskManager();
+        fm.setFilePath(file);
         Task task = null;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -91,24 +95,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Task addTask(Task task) {
-        Task t = super.addTask(task);
+        Task taskToReturn = super.addTask(task);
         save();
-        return t;
+        return taskToReturn;
 
     }
 
     @Override
     public Epic addEpic(Epic epic) {
-        Epic t = super.addEpic(epic);
+        Epic epicToReturn = super.addEpic(epic);
         save();
-        return t;
+        return epicToReturn;
     }
 
     @Override
     public SubTask addSubTask(SubTask subtask) {
-        SubTask t = super.addSubTask(subtask);
+        SubTask subTaskToReturn = super.addSubTask(subtask);
         save();
-        return t;
+        return subTaskToReturn;
     }
 
     @Override

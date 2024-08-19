@@ -29,7 +29,8 @@ class FileBackedTaskManagerTest {
         if (!Files.exists(path)) {
             Files.createFile(path);
         }
-        hm = Managers.getDefaultFileBackedTaskManager(path);
+        hm = Managers.getDefaultFileBackedTaskManager();
+        hm.setFilePath(path.toFile());
         task1 = new Task("task1", "task1_before",
                 Status.NEW, Duration.ofSeconds(14),
                 LocalDateTime.of(2024, 8, 19, 20, 9, 25));
@@ -54,7 +55,7 @@ class FileBackedTaskManagerTest {
         subTask1.setEpic(epic1.getId());
         hm.addSubTask(subTask1);
 
-        FileBackedTaskManager hm2 = Managers.getDefaultFileBackedTaskManager(path, true);
+        FileBackedTaskManager hm2 = FileBackedTaskManager.loadFromFile(path.toFile());
         assertEquals(1, hm2.tasks.size(), "Задача загружена при загрузке из файла");
         assertEquals(1, hm2.subTasks.size(), "Подзадача загружена при загрузке из файла");
         assertEquals(1, hm2.epics.size(), "Эпик загружен при загрузке из файла");
