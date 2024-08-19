@@ -5,6 +5,8 @@ import com.yandex.util.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
@@ -17,7 +19,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     // сохранить изменения в файл
     private void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            bw.write("id,type,name,desc,status,epic\n");
+            bw.write("id,type,name,desc,status,duration,startTime,epic\n");
 
             for (Task task : getAllTasks()) {
                 bw.write(task.toCSV() + "\n");
@@ -71,15 +73,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = row[2];
         String desc = row[3];
         Status status = Status.valueOf(row[4]);
+        Duration duration = row[5].equalsIgnoreCase("null") ? null : Duration.parse(row[5]);
+        LocalDateTime startTime = row[6].equalsIgnoreCase("null") ? null : LocalDateTime.parse(row[6]);
 
         switch (type) {
             case TASK:
-                return new Task(id, name, desc, status);
+                return new Task(id, name, desc, status, duration, startTime);
             case EPIC:
-                return new Epic(id, name, desc, status);
+                return new Epic(id, name, desc, status, duration, startTime);
             case SUBTASK:
-                int epicId = Integer.parseInt(row[5]);
-                return new SubTask(id, name, desc, status, epicId);
+                int epicId = Integer.parseInt(row[7]);
+                return new SubTask(id, name, desc, status, epicId, duration, startTime);
             default:
                 throw new ManagerSaveException("Неизвестный тип задачи");
         }

@@ -5,9 +5,10 @@ import com.yandex.model.Status;
 import com.yandex.model.SubTask;
 import com.yandex.model.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     private static int counter = 1;
@@ -15,6 +16,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> tasks;
     protected final HashMap<Integer, SubTask> subTasks;
     private final HistoryManager historyManager;
+    protected final Comparator<Task> taskDTComparator = Comparator.comparing(Task::getStartTime);
+    private final TreeSet<Task> sorted = new TreeSet<>(taskDTComparator);
 
     public InMemoryTaskManager() {
         epics = new HashMap<>();
@@ -29,11 +32,20 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
+    // получить отсортированный список задач
+    public List<Task> getSorted() {
+        return new ArrayList<>(sorted);
+    }
+
     // создать задачу
     @Override
     public Task addTask(Task task) {
         int taskId = generateId();
         task.setId(taskId);
+
+        if (isStartTimeValid(task) && task.getStartTime() != null) {
+            sorted.add(task);
+        }
         tasks.put(taskId, task);
         return task;
     }
@@ -124,11 +136,15 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.clear();
         epics.clear();
         subTasks.clear();
+        sorted.clear();
     }
 
     // удалить все задачи
     @Override
     public void deleteAllTasks() {
+        tasks.forEach((k, v) -> {
+            sorted.removeIf(v::equals);
+        });
         tasks.clear();
     }
 
@@ -136,20 +152,20 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllEpics() {
         epics.clear();
+        subTasks.forEach((k, v) -> {
+            sorted.removeIf(v::equals);
+        });
         subTasks.clear();
     }
 
     // удалить все подзадачи
     @Override
     public void deleteAllSubTasks() {
+        subTasks.forEach((k, v) -> {
+            sorted.removeIf(v::equals);
+        });
         subTasks.clear();
-        for (int id : epics.keySet()) {
-            updateEpicOnChange(id);
-        }
-        for (Epic epic : epics.values()) {
-            epic.clearSubTasks();
-            updateEpic(epic);
-        }
+        epics.values().forEach(Epic::clearSubTasks);
     }
 
     // удалить задачу
@@ -256,6 +272,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         Epic epic = epics.get(epicId);
         if (size > 0) {
+            // status
             if (countNew == size) {
                 epic.setStatus(Status.NEW);
             } else if (countDone == size) {
@@ -263,8 +280,32 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 epic.setStatus(Status.IN_PROGRESS);
             }
-            epics.put(epicId, epic);
+            // duration
+            long sumDuration = epic.getSubTasks().stream()
+                    .mapToLong(id -> subTasks.get(id).getDuration().getSeconds())
+                    .sum();
+            epic.setDuration(Duration.ofSeconds(sumDuration));
+
+            // startTime / endTime
+            List<SubTask> epicsSubTasks = subTasks.values().stream()
+                    .filter(subtask -> epic.getSubTasks().contains(subtask.getId()))
+                    .collect(Collectors.toList());
+
+            if (!epicsSubTasks.isEmpty()) {
+                epicsSubTasks.sort(taskDTComparator);
+                epic.setStartTime(epicsSubTasks.getFirst().getStartTime());
+                epic.setEndTime(Optional.ofNullable(epicsSubTasks.getLast().getEndTime()));
+
+                epics.put(epicId, epic);
+            }
         }
+    }
+
+    // валидация времени
+    private boolean isStartTimeValid(Task task) {
+        boolean result = sorted.stream().noneMatch(sortedTask ->
+                sortedTask.getEndTime().isAfter(task.getStartTime()));
+        return result;
     }
 
     // генератор ID

@@ -1,5 +1,8 @@
 package com.yandex.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class SubTask extends Task {
     private int epic;
     private final TaskType taskType;
@@ -12,6 +15,20 @@ public class SubTask extends Task {
     public SubTask(int id, String name, String description, Status status, int epic) {
         super(id, name, description, status);
         this.epic = epic;
+        this.taskType = TaskType.SUBTASK;
+    }
+
+    public SubTask(int id, String name, String description, Status status,
+                   int epic, Duration duration, LocalDateTime startTime) {
+        super(id, name, description, status, duration, startTime);
+        this.epic = epic;
+        this.taskType = TaskType.SUBTASK;
+    }
+
+    public SubTask(String name, String description, Status status, int epicId,
+                   LocalDateTime startTime, Duration duration) {
+        super(name, description, status, duration, startTime);
+        this.epic = epicId;
         this.taskType = TaskType.SUBTASK;
     }
 
@@ -34,11 +51,14 @@ public class SubTask extends Task {
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
+                ", duration=" + getDuration() +
+                ", startTime=" + getStartTime() +
                 ", epicID='" + getEpic() + '\'' + '}';
     }
 
     public String toCSV() {
         return (getId() + "," + getType() + "," + getName() + ","
-                + getDescription() + "," + getStatus() + "," + getEpic());
+                + getDescription() + "," + getStatus() + "," +
+                getDuration() + "," + getStartTime() + "," + getEpic());
     }
 }
