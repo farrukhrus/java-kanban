@@ -307,11 +307,13 @@ public class InMemoryTaskManager implements TaskManager {
 
             if (!epicsSubTasks.isEmpty()) {
                 epicsSubTasks.sort(taskDTComparator);
-                epic.setStartTime(epicsSubTasks.getFirst().getStartTime());
-                epic.setEndTime(Optional.ofNullable(epicsSubTasks.getLast().getEndTime()));
+                SubTask first = epicsSubTasks.getFirst();
+                SubTask last = epicsSubTasks.getLast();
 
-                epics.put(epicId, epic);
+                epic.setStartTime(first.getStartTime());
+                epic.setEndTime(last.getEndTime());
             }
+            epics.put(epicId, epic);
         }
     }
 

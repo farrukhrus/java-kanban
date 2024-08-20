@@ -27,17 +27,17 @@ public class Main {
         // создание задачи
         Task task1 = new Task("task1", "task1_before",
                 Status.NEW, Duration.ofSeconds(14),
-                LocalDateTime.of(2024, 8, 19, 20, 9, 25));
+                LocalDateTime.of(2024, 8, 20, 20, 9, 25));
         tm.addTask(task1);
 
         Task task3 = new Task("task3",
                 "task3 comment", Status.NEW, Duration.ofSeconds(14),
-                LocalDateTime.of(2024, 8, 19, 21, 9, 25));
+                LocalDateTime.of(2024, 8, 20, 21, 9, 25));
         tm.addTask(task3);
 
         Task task4 = new Task("task4", "task4 comment",
                 Status.NEW, Duration.ofSeconds(14),
-                LocalDateTime.of(2024, 8, 19, 22, 9, 25));
+                LocalDateTime.of(2024, 8, 20, 22, 9, 25));
         tm.addTask(task4);
 
         // ========== Эпики ========== //
@@ -48,15 +48,23 @@ public class Main {
 
         // ========== Подзадачи ========== //
         SubTask t1 = new SubTask("subtask1","subtask1_before", Status.NEW, e1.getId(),
-                LocalDateTime.of(2024, 8, 19, 23, 15, 45),
+                LocalDateTime.of(2024, 8, 20, 23, 15, 45),
                 Duration.ofSeconds(50));
         SubTask t3 = new SubTask("subtask3", "subtask3_before", Status.NEW, e1.getId(),
-                LocalDateTime.of(2024, 8, 19, 23, 19, 45),
+                LocalDateTime.of(2024, 8, 20, 23, 18, 45),
                 Duration.ofSeconds(50));
 
         // добавление подзадачи в эпик
         tm.addSubTask(t1);
         tm.addSubTask(t3);
+
+        // проверка расчетов start- endTime у Epic
+        System.out.println("Список поздадач у Epic " + e1.getName());
+        for (var item : tm.getAllSubTasksByEpic(e1.getId())) {
+            System.out.println(item);
+        }
+
+        System.out.println(e1);
 
         // история просмотра не больше 10 записей
         /*tm.getSubTaskById(5);
