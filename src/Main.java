@@ -48,10 +48,10 @@ public class Main {
 
         // ========== Подзадачи ========== //
         SubTask t1 = new SubTask("subtask1","subtask1_before", Status.NEW, e1.getId(),
-                LocalDateTime.of(2024, 8, 19, 20, 15, 45),
+                LocalDateTime.of(2024, 8, 19, 23, 15, 45),
                 Duration.ofSeconds(50));
         SubTask t3 = new SubTask("subtask3", "subtask3_before", Status.NEW, e1.getId(),
-                LocalDateTime.of(2024, 8, 19, 20, 19, 45),
+                LocalDateTime.of(2024, 8, 19, 23, 19, 45),
                 Duration.ofSeconds(50));
 
         // добавление подзадачи в эпик
@@ -67,11 +67,13 @@ public class Main {
             System.out.println(item);
         }*/
 
-        // вывести список задач
-        for (var item : tm.getAllTasks()) {
+        // вывести список задач типа Task
+        /*for (var item : tm.getAllTasks()) {
             System.out.println(item);
-        }
-        System.out.println("######");
+        }*/
+
+        // вывести список всех отсортированных задачи
+        System.out.println("\nОтсортированный список задач:");
         for (var item : tm.getSorted()) {
             System.out.println(item);
         }

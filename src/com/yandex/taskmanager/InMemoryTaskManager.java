@@ -68,6 +68,10 @@ public class InMemoryTaskManager implements TaskManager {
             epic.addSubTask(subTaskId);
             subTasks.put(subTaskId, subTask);
             updateEpicOnChange(epic.getId());
+
+            if (isStartTimeValid(subTask) && subTask.getStartTime() != null) {
+                sorted.add(subTask);
+            }
             return subTask;
         } else {
             System.out.println("Подзадача не создана. Подзадача должна содержать ссылку на существующий эпик");
@@ -221,6 +225,11 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(Task task) {
         if (tasks.containsKey(task.getId())) {
             tasks.put(task.getId(), task);
+
+            sorted.remove(task);
+            if (isStartTimeValid(task) && task.getStartTime() != null) {
+                sorted.add(task);
+            }
         } else {
             System.out.println("Задача не обновлена. Не найдена задача с ID - " + task.getId());
         }
@@ -232,6 +241,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epic.getId())) {
             deleteSubTasksByEpicId(epic.getId());
             epics.put(epic.getId(), epic);
+            updateEpicOnChange(epic.getId());
         } else {
             System.out.println("Эпик не обновлен. Не найден эпик с ID - " + epic.getId());
         }
@@ -245,6 +255,11 @@ public class InMemoryTaskManager implements TaskManager {
             if (subTasks.containsKey(subTask.getId())) {
                 subTasks.put(subTask.getId(), subTask);
                 updateEpicOnChange(subTask.getEpic());
+
+                sorted.remove(subTask);
+                if (isStartTimeValid(subTask) && subTask.getStartTime() != null) {
+                    sorted.add(subTask);
+                }
             } else {
                 System.out.println("Подзадача не обновлена. Не найдена подзадача с ID - " + subTask.getId());
             }
@@ -253,7 +268,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    // обновить статус эпика при обновлении подзадач
+    // обновить эпик при обновление/обновление подзадач
     void updateEpicOnChange(int epicId) {
         int size = 0;
         int countNew = 0;
