@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subTasks = new ArrayList<>();
+    private final ArrayList<Integer> subTasks = new ArrayList<>();
     private final TaskType taskType;
     private LocalDateTime endTime;
 
@@ -27,13 +27,6 @@ public class Epic extends Task {
     public Epic(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
         super(name, description, status, duration, startTime);
         this.taskType = TaskType.EPIC;
-    }
-
-    public Epic(String name, String description, Status status, Duration duration,
-                LocalDateTime startTime, ArrayList<Integer> subTasks) {
-        super(name, description, status, duration, startTime);
-        this.taskType = TaskType.EPIC;
-        this.subTasks = subTasks;
     }
 
     public ArrayList<Integer> getSubTasks() {
@@ -74,8 +67,8 @@ public class Epic extends Task {
                 ", subTasks='" + getSubTasks() + '\'' + '}';
     }
 
-    public String toCSV() {
-        return (getId() + "," + getType() + "," + getName() + ","
-                + getDescription() + "," + getStatus() + "," + getDuration() + "," + getStartTime() + ",");
+    public String toCsv() {
+        return (getId() + "," + getType() + "," + getName() + "," +
+                getDescription() + "," + getStatus() + "," + getDuration() + "," + getStartTime() + ",");
     }
 }

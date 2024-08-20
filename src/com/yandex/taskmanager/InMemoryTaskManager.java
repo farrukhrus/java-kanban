@@ -5,6 +5,7 @@ import com.yandex.model.Status;
 import com.yandex.model.SubTask;
 import com.yandex.model.Task;
 
+import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,6 +45,9 @@ public class InMemoryTaskManager implements TaskManager {
 
         if (isStartTimeValid(task) && task.getStartTime() != null) {
             sorted.add(task);
+        } else {
+            System.out.println(MessageFormat.format("Введенная дата начала задачи {0} не валидна: {1}",
+                    task.getId(), task.getStartTime()));
         }
         tasks.put(taskId, task);
         return task;
@@ -71,6 +75,9 @@ public class InMemoryTaskManager implements TaskManager {
 
             if (isStartTimeValid(subTask) && subTask.getStartTime() != null) {
                 sorted.add(subTask);
+            } else {
+                System.out.println(MessageFormat.format("Введенная дата начала подзадачи {0} не валидна: {1}",
+                        subTask.getId(), subTask.getStartTime()));
             }
             return subTask;
         } else {
@@ -319,9 +326,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     // валидация времени
     private boolean isStartTimeValid(Task task) {
-        boolean result = sorted.stream().noneMatch(sortedTask ->
+        return sorted.stream().noneMatch(sortedTask ->
                 sortedTask.getEndTime().isAfter(task.getStartTime()));
-        return result;
     }
 
     // генератор ID

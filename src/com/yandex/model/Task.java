@@ -12,6 +12,7 @@ public class Task {
     private int id;
     private Duration duration;
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     public Task(String name, String description) {
         this.status = Status.NEW;
@@ -27,6 +28,7 @@ public class Task {
         this.duration = duration;
         this.startTime = startTime;
         this.taskType = TaskType.TASK;
+        this.endTime = startTime.plus(duration);
     }
 
     public Task(int id, String name, String description, Status status) {
@@ -37,7 +39,8 @@ public class Task {
         this.taskType = TaskType.TASK;
     }
 
-    public Task(int id, String name, String description, Status status, Duration duration, LocalDateTime startTime) {
+    public Task(int id, String name, String description, Status status,
+                Duration duration, LocalDateTime startTime) {
         this.id = id;
         this.status = status;
         this.name = name;
@@ -45,6 +48,7 @@ public class Task {
         this.duration = duration;
         this.startTime = startTime;
         this.taskType = TaskType.TASK;
+        this.endTime = startTime.plus(duration);
     }
 
     public void setStatus(Status status) {
@@ -100,13 +104,13 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plus(duration);
+        return this.endTime;
     }
 
-    public String toCSV() {
-        return (getId() + "," + getType() + "," + getName() + ","
-                + getDescription() + "," + getStatus() + ","
-                + getDuration() + "," + getStartTime() + ",");
+    public String toCsv() {
+        return (getId() + "," + getType() + "," + getName() + "," +
+                getDescription() + "," + getStatus() + "," +
+                getDuration() + "," + getStartTime() + ",");
     }
 
     @Override
@@ -119,6 +123,7 @@ public class Task {
                 ", type=" + getType() +
                 ", duration=" + getDuration() +
                 ", startTime=" + getStartTime() +
+                ", startTime=" + getEndTime() +
                 '}';
     }
 

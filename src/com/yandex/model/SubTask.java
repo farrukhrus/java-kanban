@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public class SubTask extends Task {
     private int epic;
     private final TaskType taskType;
+    private LocalDateTime endTime;
 
     public SubTask(String name, String description) {
         super(name, description);
@@ -23,6 +24,7 @@ public class SubTask extends Task {
         super(id, name, description, status, duration, startTime);
         this.epic = epic;
         this.taskType = TaskType.SUBTASK;
+        this.endTime = startTime.plus(duration);
     }
 
     public SubTask(String name, String description, Status status, int epicId,
@@ -30,6 +32,7 @@ public class SubTask extends Task {
         super(name, description, status, duration, startTime);
         this.epic = epicId;
         this.taskType = TaskType.SUBTASK;
+        this.endTime = startTime.plus(duration);
     }
 
     public int getEpic() {
@@ -54,12 +57,13 @@ public class SubTask extends Task {
                 ", type=" + getType() +
                 ", duration=" + getDuration() +
                 ", startTime=" + getStartTime() +
+                ", startTime=" + getEndTime() +
                 ", epicID='" + getEpic() + '\'' + '}';
     }
 
-    public String toCSV() {
-        return (getId() + "," + getType() + "," + getName() + ","
-                + getDescription() + "," + getStatus() + "," +
+    public String toCsv() {
+        return (getId() + "," + getType() + "," + getName() + "," +
+                getDescription() + "," + getStatus() + "," +
                 getDuration() + "," + getStartTime() + "," + getEpic());
     }
 }
