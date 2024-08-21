@@ -1,10 +1,13 @@
 package com.yandex.model;
 
+import java.time.Duration;
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 public class Epic extends Task {
     private final ArrayList<Integer> subTasks = new ArrayList<>();
     private final TaskType taskType;
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -13,6 +16,16 @@ public class Epic extends Task {
 
     public Epic(int id, String name, String description, Status status) {
         super(id, name, description, status);
+        this.taskType = TaskType.EPIC;
+    }
+
+    public Epic(int id, String name, String description, Status status, Duration duration, LocalDateTime startTime) {
+        super(id, name, description, status, duration, startTime);
+        this.taskType = TaskType.EPIC;
+    }
+
+    public Epic(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
+        super(name, description, status, duration, startTime);
         this.taskType = TaskType.EPIC;
     }
 
@@ -32,6 +45,14 @@ public class Epic extends Task {
         return taskType;
     }
 
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return this.endTime;
+    }
+
     @Override
     public String toString() {
         return "Epic {" +
@@ -39,11 +60,15 @@ public class Epic extends Task {
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
+                ", type=" + getType() +
+                ", duration=" + getDuration() +
+                ", startTime=" + getStartTime() +
+                ", endTime=" + getEndTime() +
                 ", subTasks='" + getSubTasks() + '\'' + '}';
     }
 
-    public String toCSV() {
-        return (getId() + "," + getType() + "," + getName() + ","
-                + getDescription() + "," + getStatus() + ",");
+    public String toCsv() {
+        return (getId() + "," + getType() + "," + getName() + "," +
+                getDescription() + "," + getStatus() + "," + getDuration() + "," + getStartTime() + ",");
     }
 }

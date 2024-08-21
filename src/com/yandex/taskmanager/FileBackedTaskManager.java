@@ -5,28 +5,33 @@ import com.yandex.util.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private final File file;
+    private File file;
 
-    public FileBackedTaskManager(File file) {
+    public FileBackedTaskManager() {
         super();
+    }
+
+    public void setFilePath(File file) {
         this.file = file;
     }
 
     // сохранить изменения в файл
     private void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            bw.write("id,type,name,desc,status,epic\n");
+            bw.write("id,type,name,desc,status,duration,startTime,epic\n");
 
             for (Task task : getAllTasks()) {
-                bw.write(task.toCSV() + "\n");
+                bw.write(task.toCsv() + "\n");
             }
             for (Epic epic : getAllEpics()) {
-                bw.write(epic.toCSV() + "\n");
+                bw.write(epic.toCsv() + "\n");
             }
             for (SubTask subTask : getAllSubTasks()) {
-                bw.write(subTask.toCSV() + "\n");
+                bw.write(subTask.toCsv() + "\n");
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Возникла ошибка при записи файла.");
@@ -35,7 +40,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     // загрузить данные из файла
     public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager fm = new FileBackedTaskManager(file);
+        FileBackedTaskManager fm = new FileBackedTaskManager();
+        fm.setFilePath(file);
         Task task = null;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -71,15 +77,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = row[2];
         String desc = row[3];
         Status status = Status.valueOf(row[4]);
+        Duration duration = row[5].equalsIgnoreCase("null") ? null : Duration.parse(row[5]);
+        LocalDateTime startTime = row[6].equalsIgnoreCase("null") ? null : LocalDateTime.parse(row[6]);
 
         switch (type) {
             case TASK:
-                return new Task(id, name, desc, status);
+                return new Task(id, name, desc, status, duration, startTime);
             case EPIC:
-                return new Epic(id, name, desc, status);
+                return new Epic(id, name, desc, status, duration, startTime);
             case SUBTASK:
-                int epicId = Integer.parseInt(row[5]);
-                return new SubTask(id, name, desc, status, epicId);
+                int epicId = Integer.parseInt(row[7]);
+                return new SubTask(id, name, desc, status, epicId, duration, startTime);
             default:
                 throw new ManagerSaveException("Неизвестный тип задачи");
         }
@@ -87,24 +95,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Task addTask(Task task) {
-        Task t = super.addTask(task);
+        Task taskToReturn = super.addTask(task);
         save();
-        return t;
-
+        return taskToReturn;
     }
 
     @Override
     public Epic addEpic(Epic epic) {
-        Epic t = super.addEpic(epic);
+        Epic epicToReturn = super.addEpic(epic);
         save();
-        return t;
+        return epicToReturn;
     }
 
     @Override
     public SubTask addSubTask(SubTask subtask) {
-        SubTask t = super.addSubTask(subtask);
+        SubTask subTaskToReturn = super.addSubTask(subtask);
         save();
-        return t;
+        return subTaskToReturn;
     }
 
     @Override

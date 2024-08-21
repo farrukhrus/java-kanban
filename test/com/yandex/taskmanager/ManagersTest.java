@@ -29,6 +29,6 @@ class ManagersTest {
         if (!Files.exists(path)) {
             Files.createFile(path);
         }
-        Assertions.assertNotNull(Managers.getDefaultFileBackedTaskManager(path));
+        Assertions.assertNotNull(Managers.getDefaultFileBackedTaskManager());
     }
 }
