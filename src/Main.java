@@ -1,9 +1,13 @@
+import com.google.gson.GsonBuilder;
+import com.yandex.api.adapters.DurationAdapter;
+import com.yandex.api.adapters.LocalDateTimeAdapter;
 import com.yandex.model.Epic;
 import com.yandex.model.Status;
 import com.yandex.model.SubTask;
 import com.yandex.model.Task;
 import com.yandex.taskmanager.FileBackedTaskManager;
 import com.yandex.taskmanager.Managers;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -29,6 +33,13 @@ public class Main {
                 Status.NEW, Duration.ofSeconds(14),
                 LocalDateTime.of(2024, 8, 20, 20, 9, 25));
         tm.addTask(task1);
+
+        /*Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
+        System.out.println(gson.toJson(task1));*/
 
         Task task3 = new Task("task3",
                 "task3 comment", Status.NEW, Duration.ofSeconds(14),
