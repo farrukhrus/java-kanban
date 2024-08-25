@@ -7,13 +7,15 @@ import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
     public static void main(String[] args) throws IOException {
+        final int PORT = 8080;
+
         TaskManager taskManager = Managers.getDefault();
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
 
         server.createContext("/tasks", new TasksHttpHandler(taskManager));
 
-        /*server.createContext("/subtasks", new SubtasksHttpHandler(taskManager));
-        server.createContext("/epics", new EpicsHttpHandler(taskManager));
+        server.createContext("/subtasks", new SubTasksHttpHandler(taskManager));
+        /*server.createContext("/epics", new EpicsHttpHandler(taskManager));
         server.createContext("/history", new HistoryHttpHandler(taskManager));
         server.createContext("/prioritized", new PrioritiziedHttpHandler(taskManager));*/
 

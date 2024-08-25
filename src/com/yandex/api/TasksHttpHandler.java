@@ -3,11 +3,11 @@ package com.yandex.api;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.yandex.taskmanager.TaskManager;
 import com.yandex.model.Task;
-
+import com.yandex.taskmanager.TaskManager;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +15,9 @@ public class TasksHttpHandler extends BaseHttpHandler implements HttpHandler {
     public TasksHttpHandler(TaskManager taskManager) {
         super(taskManager);
     }
+
+    private final Gson gson = getGson();
+    private final TaskManager taskManager = getTaskManager();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -38,18 +41,13 @@ public class TasksHttpHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handleGetTaskById(HttpExchange exchange) throws IOException {
-        Optional<Integer> taskIdOpt = getIdFromUrl(exchange);
-        if (taskIdOpt.isPresent()) {
-            int taskId = taskIdOpt.get();
-            Optional<Task> taskOpt = Optional.ofNullable(taskManager.getTaskById(taskId));
-            if (taskOpt.isPresent()) {
-                Task task = taskOpt.get();
-                sendText(exchange, gson.toJson(task), 200);
-            } else {
-                sendText(exchange, "Задачи с идентификатором %s не найдено", 404);
-            }
+        Integer taskId = getIdFromUrl(exchange);
+        Optional<Task> taskOpt = Optional.ofNullable(taskManager.getTaskById(taskId));
+        if (taskOpt.isPresent()) {
+            Task task = taskOpt.get();
+            sendText(exchange, gson.toJson(task), 200);
         } else {
-            sendText(exchange, "Некорректный идентификатор задачи", 400);
+            sendText(exchange, "Задачи с идентификатором %s не найдено", 404);
         }
     }
 
@@ -60,21 +58,15 @@ public class TasksHttpHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handleDeleteTask(HttpExchange exchange) throws IOException {
-        Optional<Integer> taskIdOpt = getIdFromUrl(exchange);
-        if (taskIdOpt.isPresent()) {
-            int taskId = taskIdOpt.get();
-            taskManager.deleteTaskById(taskId);
-            sendText(exchange, "Задача успешно удалена", 200);
-        } else {
-            sendText(exchange, "Некорректный идентификатор задачи", 400);
-        }
+        int taskId = getIdFromUrl(exchange);
+        taskManager.deleteTaskById(taskId);
+        sendText(exchange, "Задача успешно удалена", 200);
     }
 
     private void handlePostTask(HttpExchange exchange) {
         try {
-            String response = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-            Task task = gson.fromJson(response, Task.class);
-            System.out.println("asdf");
+            String request = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+            Task task = gson.fromJson(request, Task.class);
             if (task.getId() == 0) {
                 int id = taskManager.addTask(task).getId();
                 if (id < 0) {
@@ -87,31 +79,7 @@ public class TasksHttpHandler extends BaseHttpHandler implements HttpHandler {
             exchange.sendResponseHeaders(201, 0);
             exchange.close();
         } catch (IOException e) {
-            System.out.println("Что-то пошло не так\n\t" + e.getMessage());
+            System.out.println(MessageFormat.format("Что-то пошло не так\n\t{0}", e.getMessage()));
         }
-    }
-
-    protected RequestType getRequestType(String requestPath, String requestMethod) {
-        String[] pathParts = requestPath.split("/");
-
-        if (!pathParts[1].equals("tasks")) return RequestType.UNKNOWN;
-
-        if (pathParts.length == 3) {
-            if (requestMethod.equals("GET")) {
-                return RequestType.GET_BY_ID;
-            }
-            if (requestMethod.equals("DELETE")) {
-                return RequestType.DELETE;
-            }
-        }
-        if (pathParts.length == 2) {
-            if (requestMethod.equals("GET")) {
-                return RequestType.GET_ALL;
-            }
-            if (requestMethod.equals("POST")) {
-                return RequestType.CREATE;
-            }
-        }
-        return RequestType.UNKNOWN;
     }
 }

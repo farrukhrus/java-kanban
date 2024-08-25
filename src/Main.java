@@ -34,12 +34,12 @@ public class Main {
                 LocalDateTime.of(2024, 8, 20, 20, 9, 25));
         tm.addTask(task1);
 
-        /*Gson gson = new GsonBuilder()
+        // Для тестирования. Удалю перед merge c main
+        Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
                 .create();
-        System.out.println(gson.toJson(task1));*/
 
         Task task3 = new Task("task3",
                 "task3 comment", Status.NEW, Duration.ofSeconds(14),
@@ -74,6 +74,10 @@ public class Main {
         for (var item : tm.getAllSubTasksByEpic(e1.getId())) {
             System.out.println(item);
         }
+
+        // Для тестирования. Удалю перед merge c main
+        System.out.println(t1);
+        System.out.println(gson.toJson(t1));
 
         System.out.println(e1);
 
