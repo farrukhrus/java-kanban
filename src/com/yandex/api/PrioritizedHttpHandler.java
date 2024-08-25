@@ -5,7 +5,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.yandex.model.Task;
 import com.yandex.taskmanager.TaskManager;
-import java.io.IOException;
 import java.util.List;
 
 public class PrioritizedHttpHandler extends BaseHttpHandler implements HttpHandler {
