@@ -6,27 +6,25 @@ import java.time.LocalDateTime;
 
 public class Epic extends Task {
     private final ArrayList<Integer> subTasks = new ArrayList<>();
-    private final TaskType taskType;
-    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
-        this.taskType = TaskType.EPIC;
+        setTaskType(TaskType.EPIC);
     }
 
     public Epic(int id, String name, String description, Status status) {
         super(id, name, description, status);
-        this.taskType = TaskType.EPIC;
+        setTaskType(TaskType.EPIC);
     }
 
     public Epic(int id, String name, String description, Status status, Duration duration, LocalDateTime startTime) {
         super(id, name, description, status, duration, startTime);
-        this.taskType = TaskType.EPIC;
+        setTaskType(TaskType.EPIC);
     }
 
     public Epic(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
         super(name, description, status, duration, startTime);
-        this.taskType = TaskType.EPIC;
+        setTaskType(TaskType.EPIC);
     }
 
     public ArrayList<Integer> getSubTasks() {
@@ -42,15 +40,15 @@ public class Epic extends Task {
     }
 
     public TaskType getType() {
-        return taskType;
+        return getTaskType();
     }
 
     public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+        super.setEndTime(endTime);
     }
 
     public LocalDateTime getEndTime() {
-        return this.endTime;
+        return super.getEndTime();
     }
 
     @Override

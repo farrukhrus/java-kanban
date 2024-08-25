@@ -76,10 +76,9 @@ public class Main {
         }
 
         // Для тестирования. Удалю перед merge c main
-        System.out.println(t1);
-        System.out.println(gson.toJson(t1));
-
         System.out.println(e1);
+        System.out.println(gson.toJson(e1));
+
 
         // история просмотра не больше 10 записей
         /*tm.getSubTaskById(5);
