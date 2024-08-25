@@ -5,7 +5,6 @@ public enum RequestType {
     GET_BY_ID,
     GET_SUBTASKS,
     CREATE,
-    UPDATE,
     DELETE,
     UNKNOWN
 }
