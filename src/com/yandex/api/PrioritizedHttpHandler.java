@@ -8,8 +8,8 @@ import com.yandex.taskmanager.TaskManager;
 import java.io.IOException;
 import java.util.List;
 
-public class HistoryHttpHandler extends BaseHttpHandler implements HttpHandler {
-    public HistoryHttpHandler(TaskManager taskManager) {
+public class PrioritizedHttpHandler extends BaseHttpHandler implements HttpHandler {
+    public PrioritizedHttpHandler(TaskManager taskManager) {
         super(taskManager);
     }
 

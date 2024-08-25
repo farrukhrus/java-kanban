@@ -336,4 +336,9 @@ public class InMemoryTaskManager implements TaskManager {
     int generateId() {
         return InMemoryTaskManager.counter++;
     }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return getSorted();
+    }
 }
