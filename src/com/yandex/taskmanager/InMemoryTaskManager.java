@@ -4,7 +4,6 @@ import com.yandex.model.Epic;
 import com.yandex.model.Status;
 import com.yandex.model.SubTask;
 import com.yandex.model.Task;
-
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.*;
@@ -81,7 +80,8 @@ public class InMemoryTaskManager implements TaskManager {
             }
             return subTask;
         } else {
-            System.out.println("Подзадача не создана. Подзадача должна содержать ссылку на существующий эпик");
+            System.out.println("Подзадача не создана. " +
+                    "Подзадача должна содержать ссылку на существующий эпик");
         }
         return null;
     }
@@ -238,7 +238,7 @@ public class InMemoryTaskManager implements TaskManager {
                 sorted.add(task);
             }
         } else {
-            System.out.println("Задача не обновлена. Не найдена задача с ID - " + task.getId());
+            System.out.printf("Задача не обновлена. Не найдена задача с ID - %d%n", task.getId());
         }
     }
 
@@ -250,7 +250,7 @@ public class InMemoryTaskManager implements TaskManager {
             epics.put(epic.getId(), epic);
             updateEpicOnChange(epic.getId());
         } else {
-            System.out.println("Эпик не обновлен. Не найден эпик с ID - " + epic.getId());
+            System.out.printf("Эпик не обновлен. Не найден эпик с ID - %d%n", epic.getId());
         }
 
     }
@@ -268,10 +268,12 @@ public class InMemoryTaskManager implements TaskManager {
                     sorted.add(subTask);
                 }
             } else {
-                System.out.println("Подзадача не обновлена. Не найдена подзадача с ID - " + subTask.getId());
+                System.out.printf("Подзадача не обновлена. Не найдена подзадача с ID - %d%n",
+                        subTask.getId());
             }
         } else {
-            System.out.println("Подзадача не обновлена. Подзадача должна содержать ссылку на существующий эпик");
+            System.out.println("Подзадача не обновлена. " +
+                    "Подзадача должна содержать ссылку на существующий эпик");
         }
     }
 
@@ -333,5 +335,10 @@ public class InMemoryTaskManager implements TaskManager {
     // генератор ID
     int generateId() {
         return InMemoryTaskManager.counter++;
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return getSorted();
     }
 }

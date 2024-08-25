@@ -5,31 +5,30 @@ import java.time.LocalDateTime;
 
 public class SubTask extends Task {
     private int epic;
-    private final TaskType taskType;
 
     public SubTask(String name, String description) {
         super(name, description);
-        this.taskType = TaskType.SUBTASK;
+        setTaskType(TaskType.SUBTASK);
     }
 
     public SubTask(int id, String name, String description, Status status, int epic) {
         super(id, name, description, status);
         this.epic = epic;
-        this.taskType = TaskType.SUBTASK;
+        setTaskType(TaskType.SUBTASK);
     }
 
     public SubTask(int id, String name, String description, Status status,
                    int epic, Duration duration, LocalDateTime startTime) {
         super(id, name, description, status, duration, startTime);
         this.epic = epic;
-        this.taskType = TaskType.SUBTASK;
+        setTaskType(TaskType.SUBTASK);
     }
 
     public SubTask(String name, String description, Status status, int epicId,
                    LocalDateTime startTime, Duration duration) {
         super(name, description, status, duration, startTime);
         this.epic = epicId;
-        this.taskType = TaskType.SUBTASK;
+        setTaskType(TaskType.SUBTASK);
     }
 
     public int getEpic() {
@@ -41,7 +40,7 @@ public class SubTask extends Task {
     }
 
     public TaskType getType() {
-        return taskType;
+        return getTaskType();
     }
 
     @Override
